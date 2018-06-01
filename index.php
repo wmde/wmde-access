@@ -136,6 +136,7 @@ echo "<link rel=\"stylesheet\" href=\"https://tools-static.wmflabs.org/cdnjs/aja
 echo "</head>";
 echo "<body>";
 echo "<h1>WMDE groups</h1>";
+echo "<p>Code for this tool can be found @ https://github.com/addshore/wmde-access</p>";
 echo "<h2>From operations-puppet</h2>";
 echo $puppetTable->render();
 echo "<h2>From LDAP requests</h2>";
