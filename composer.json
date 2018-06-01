@@ -1,0 +1,7 @@
+{
+    "require": {
+        "symfony/yaml": "^3.4",
+        "gilbitron/php-simplecache": "^1.4",
+        "tlr/html-table-builder": "^1.1"
+    }
+}
