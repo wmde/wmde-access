@@ -61,7 +61,7 @@ foreach ( $ldapGroups as $group ) {
 		'wmf-ldap-' . $group,
 		'https://tools.wmflabs.org/ldap/group/' . $group
 	);
-	preg_match_all( '/"\/ldap\/user\/([a-zA-Z0-9]*)"\>/', $html, $userMatches );
+	preg_match_all( '/"\/ldap\/user\/([a-zA-Z0-9-]*)"\>/', $html, $userMatches );
 	$groupMap[$group] = $userMatches[1];
 }
 
