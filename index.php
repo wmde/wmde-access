@@ -89,26 +89,36 @@ $userHtmlGen = function ( $user ) {
 	return '<a href="https://tools.wmflabs.org/ldap/user/' . $user . '">' . $user . '<a/>';
 };
 
-$ldapGroupHtmlGen = function ( $group ) {
-	// If this is a cloud VPS project
-	if ( substr( $group, 0, 8 ) === 'project-' ) {
-		$cloudVpsProject = str_replace( 'project-', '', $group );
-		return '<a href="https://tools.wmflabs.org/openstack-browser/project/' . $cloudVpsProject . '">' . $group . '</a>';
-	}
-	return $group;
+$opsLdapGroupHtmlGen = function ( $group ) {
+	return 'Ops LDAP</br>' . $group;
 };
 
-$puppetTable = new Table();
-$puppetTable->class('table table-striped table-bordered table-hover table-sm');
+$ldapGroupHtmlGen = function ( $group ) {
+	$cloudVpsLinkHtmlGen = function ( $project ) {
+		return '<a href="https://tools.wmflabs.org/openstack-browser/project/' . $project . '">' . $project . '</a>';
+	};
 
-$headerRow = $puppetTable->header()->row();
+	// If this is a cloud VPS project
+	if ( substr( $group, 0, 8 ) === 'project-' ) {
+		return 'Cloud VPS</br>' . $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $group ) );
+	}
+	return 'LDAP</br>' . $group;
+};
+
+$table = new Table();
+$table->class('table table-striped table-bordered table-hover table-sm');
+
+$headerRow = $table->header()->row();
 $headerRow->cell( '' ); // first cell...
 foreach ( $puppetGroups as $group ) {
-	$headerRow->cell( $group );
+	$headerRow->cell( $opsLdapGroupHtmlGen($group) )->raw();
+}
+foreach ( $ldapGroups as $group ) {
+	$headerRow->cell( $ldapGroupHtmlGen( $group ) )->raw();
 }
 
 foreach ( $userMap as $user => $userGroups ) {
-	$userRow = $puppetTable->body()->row();
+	$userRow = $table->body()->row();
 	$userRow->cell( $userHtmlGen( $user ) )->raw();
 	foreach ( $puppetGroups as $group ) {
 		if ( in_array( $group, $userGroups ) ) {
@@ -117,20 +127,6 @@ foreach ( $userMap as $user => $userGroups ) {
 			$userRow->cell( '' );
 		}
 	}
-}
-
-$ldapTable = new Table();
-$ldapTable->class('table table-striped table-bordered table-hover table-sm');
-
-$headerRow = $ldapTable->header()->row();
-$headerRow->cell( '' ); // first cell...
-foreach ( $ldapGroups as $group ) {
-	$headerRow->cell( $ldapGroupHtmlGen( $group ) )->raw();
-}
-
-foreach ( $userMap as $user => $userGroups ) {
-	$userRow = $ldapTable->body()->row();
-	$userRow->cell( $userHtmlGen( $user ) )->raw();
 	foreach ( $ldapGroups as $group ) {
 		if ( in_array( $group, $userGroups ) ) {
 			$userRow->cell( 'Yes' );
@@ -149,10 +145,7 @@ echo "<link rel=\"stylesheet\" href=\"https://tools-static.wmflabs.org/cdnjs/aja
 echo "</head>";
 echo "<body>";
 echo "<h1>WMDE groups</h1>";
-echo "<p>Code for this tool can be found @ https://github.com/addshore/wmde-access</p>";
-echo "<h2>From operations-puppet</h2>";
-echo $puppetTable->render();
-echo "<h2>From LDAP requests</h2>";
-echo $ldapTable->render();
+echo "<p>Code for this tool can be found @ <a href='https://github.com/addshore/wmde-access' >https://github.com/addshore/wmde-access</a></p>";
+echo $table->render();
 echo "</body>";
 echo "</html>";
