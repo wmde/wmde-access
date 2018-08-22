@@ -1,5 +1,7 @@
 <?php
 
+use Tlr\Tables\Elements\Rows\BodyRow;
+use Tlr\Tables\Elements\Rows\HeaderRow;
 use Tlr\Tables\Elements\Table;
 use WmdeAccess\Cache;
 
@@ -118,6 +120,7 @@ $_numOfCloudVpsProjects = function ( $projects ) {
 $table = new Table();
 $table->class('table table-striped table-bordered table-hover table-sm');
 
+/** @var HeaderRow $headerRow */
 $headerRow = $table->header()->row();
 $headerRow->cell( '' ); // first cell...
 $headerRow->cell( 'LDAP operations-puppet' )->spanColumns( count( $puppetGroups ) );
@@ -135,6 +138,7 @@ foreach ( $ldapGroups as $group ) {
 }
 
 foreach ( $userMap as $user => $userGroups ) {
+	/** @var BodyRow $userRow */
 	$userRow = $table->body()->row();
 	$userRow->cell( $userHtmlGen( $user ) )->raw();
 	foreach ( $puppetGroups as $group ) {
