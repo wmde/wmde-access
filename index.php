@@ -90,7 +90,7 @@ $userHtmlGen = function ( $user ) {
 };
 
 $opsLdapGroupHtmlGen = function ( $group ) {
-	return 'Ops LDAP</br>' . $group;
+	return $group;
 };
 
 $ldapGroupHtmlGen = function ( $group ) {
@@ -100,13 +100,30 @@ $ldapGroupHtmlGen = function ( $group ) {
 
 	// If this is a cloud VPS project
 	if ( substr( $group, 0, 8 ) === 'project-' ) {
-		return 'Cloud VPS</br>' . $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $group ) );
+		return $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $group ) );
 	}
-	return 'LDAP</br>' . $group;
+	return $group;
+};
+
+$_numOfCloudVpsProjects = function ( $projects ) {
+	$counter = 0;
+	foreach ( $projects as $project ) {
+		if ( substr( $project, 0, 8 ) === 'project-' ) {
+			$counter++;
+		}
+	}
+	return $counter;
 };
 
 $table = new Table();
 $table->class('table table-striped table-bordered table-hover table-sm');
+
+$headerRow = $table->header()->row();
+$headerRow->cell( '' ); // first cell...
+$headerRow->cell( 'LDAP operations-puppet' )->spanColumns( count( $puppetGroups ) );
+$headerRow->cell( 'LDAP magic' )->spanColumns( count( $ldapGroups ) -
+	$_numOfCloudVpsProjects( $ldapGroups ) );
+$headerRow->cell( 'Cloud VPS' )->spanColumns( $_numOfCloudVpsProjects( $ldapGroups ) );
 
 $headerRow = $table->header()->row();
 $headerRow->cell( '' ); // first cell...
