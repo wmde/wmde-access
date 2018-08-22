@@ -1,0 +1,11 @@
+.access-yes {
+    background-color:palegreen;
+}
+.access-no {
+}
+.group-name div {
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    white-space: nowrap;
+    font-weight: normal;
+}

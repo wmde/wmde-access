@@ -1,5 +1,7 @@
 <?php
 
+use Tlr\Tables\Elements\Rows\BodyRow;
+use Tlr\Tables\Elements\Rows\HeaderRow;
 use Tlr\Tables\Elements\Table;
 use WmdeAccess\Cache;
 
@@ -118,37 +120,51 @@ $_numOfCloudVpsProjects = function ( $projects ) {
 $table = new Table();
 $table->class('table table-striped table-bordered table-hover table-sm');
 
+/** @var HeaderRow $headerRow */
 $headerRow = $table->header()->row();
 $headerRow->cell( '' ); // first cell...
-$headerRow->cell( 'LDAP operations-puppet' )->spanColumns( count( $puppetGroups ) );
-$headerRow->cell( 'LDAP magic' )->spanColumns( count( $ldapGroups ) -
-	$_numOfCloudVpsProjects( $ldapGroups ) );
-$headerRow->cell( 'Cloud VPS' )->spanColumns( $_numOfCloudVpsProjects( $ldapGroups ) );
+$headerRow->cell( 'LDAP operations-puppet' )
+	->spanColumns( count( $puppetGroups ) )
+	->class( 'group-type' );
+$headerRow->cell( 'LDAP magic' )
+	->spanColumns( count( $ldapGroups ) - $_numOfCloudVpsProjects( $ldapGroups ) )
+	->class( 'group-type' );
+$headerRow->cell( 'Cloud VPS' )
+	->spanColumns( $_numOfCloudVpsProjects( $ldapGroups ) )
+	->class( 'group-type' );
 
 $headerRow = $table->header()->row();
 $headerRow->cell( '' ); // first cell...
+$rotateHtmlWrapper = function( $innerHtml ) {
+	return '<div>' . $innerHtml . '</div>';
+};
 foreach ( $puppetGroups as $group ) {
-	$headerRow->cell( $opsLdapGroupHtmlGen($group) )->raw();
+	$headerRow->cell( $rotateHtmlWrapper ( $opsLdapGroupHtmlGen( $group ) ) )
+		->raw()
+		->classes( [ 'group-name', 'rotate' ] );
 }
 foreach ( $ldapGroups as $group ) {
-	$headerRow->cell( $ldapGroupHtmlGen( $group ) )->raw();
+	$headerRow->cell( $rotateHtmlWrapper ( $ldapGroupHtmlGen( $group ) ) )
+		->raw()
+		->classes( [ 'group-name', 'rotate' ] );
 }
 
 foreach ( $userMap as $user => $userGroups ) {
+	/** @var BodyRow $userRow */
 	$userRow = $table->body()->row();
 	$userRow->cell( $userHtmlGen( $user ) )->raw();
 	foreach ( $puppetGroups as $group ) {
 		if ( in_array( $group, $userGroups ) ) {
-			$userRow->cell( 'Yes' );
+			$userRow->cell( 'Yes' )->class( 'access-yes' );
 		} else {
-			$userRow->cell( '' );
+			$userRow->cell( '' ) ->class( 'access-no' );
 		}
 	}
 	foreach ( $ldapGroups as $group ) {
 		if ( in_array( $group, $userGroups ) ) {
-			$userRow->cell( 'Yes' );
+			$userRow->cell( 'Yes' )->class( 'access-yes' );
 		} else {
-			$userRow->cell( '' );
+			$userRow->cell( '' )->class( 'access-no' );
 		}
 	}
 }
@@ -159,6 +175,7 @@ foreach ( $userMap as $user => $userGroups ) {
 echo "<html>";
 echo "<head>";
 echo "<link rel=\"stylesheet\" href=\"https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css\">";
+echo "<link rel=\"stylesheet\" href=\"main.css\">";
 echo "</head>";
 echo "<body>";
 echo "<h1>WMDE groups</h1>";
