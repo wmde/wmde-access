@@ -86,7 +86,7 @@ foreach ( $groupMap['wmde'] as $wmdeUser ) {
 /// Create some tables?
 
 $userHtmlGen = function ( $user ) {
-	return '<a href="https://tools.wmflabs.org/ldap/user/' . $user . '">$user<a/>';
+	return '<a href="https://tools.wmflabs.org/ldap/user/' . $user . '">' . $user . '<a/>';
 };
 
 $puppetTable = new Table();
