@@ -25,6 +25,7 @@ $puppetGroups = [
 	'analytics-wmde-users',
 	'contint-admins',
 	'contint-docker',
+	'releasers-wikidiff2',
 ];
 
 $ldapGroups = [
