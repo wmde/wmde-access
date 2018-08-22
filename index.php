@@ -85,6 +85,10 @@ foreach ( $groupMap['wmde'] as $wmdeUser ) {
 ///////////////////////////////////////////////////////////////////////////
 /// Create some tables?
 
+$userHtmlGen = function ( $user ) {
+	return '<a href="https://tools.wmflabs.org/ldap/user/' . $user . '">$user<a/>';
+};
+
 $puppetTable = new Table();
 $puppetTable->class('table table-striped table-bordered table-hover table-sm');
 
@@ -96,7 +100,7 @@ foreach ( $puppetGroups as $group ) {
 
 foreach ( $userMap as $user => $userGroups ) {
 	$userRow = $puppetTable->body()->row();
-	$userRow->cell( $user );
+	$userRow->cell( $userHtmlGen( $user ) );
 	foreach ( $puppetGroups as $group ) {
 		if ( in_array( $group, $userGroups ) ) {
 			$userRow->cell( 'Yes' );
@@ -117,7 +121,7 @@ foreach ( $ldapGroups as $group ) {
 
 foreach ( $userMap as $user => $userGroups ) {
 	$userRow = $ldapTable->body()->row();
-	$userRow->cell( $user );
+	$userRow->cell( $userHtmlGen( $user ) );
 	foreach ( $ldapGroups as $group ) {
 		if ( in_array( $group, $userGroups ) ) {
 			$userRow->cell( 'Yes' );
