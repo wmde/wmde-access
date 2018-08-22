@@ -89,6 +89,15 @@ $userHtmlGen = function ( $user ) {
 	return '<a href="https://tools.wmflabs.org/ldap/user/' . $user . '">' . $user . '<a/>';
 };
 
+$ldapGroupHtmlGen = function ( $group ) {
+	// If this is a cloud VPS project
+	if ( substr( $group, 0, 8 ) === 'project-' ) {
+		$cloudVpsProject = str_replace( 'project-', '', $group );
+		return '<a href="https://tools.wmflabs.org/openstack-browser/project/' . $cloudVpsProject . '">' . $group . '</a>';
+	}
+	return $group;
+};
+
 $puppetTable = new Table();
 $puppetTable->class('table table-striped table-bordered table-hover table-sm');
 
@@ -116,7 +125,7 @@ $ldapTable->class('table table-striped table-bordered table-hover table-sm');
 $headerRow = $ldapTable->header()->row();
 $headerRow->cell( '' ); // first cell...
 foreach ( $ldapGroups as $group ) {
-	$headerRow->cell( $group );
+	$headerRow->cell( $ldapGroupHtmlGen( $group ) )->raw();
 }
 
 foreach ( $userMap as $user => $userGroups ) {
