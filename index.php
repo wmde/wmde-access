@@ -100,7 +100,7 @@ foreach ( $puppetGroups as $group ) {
 
 foreach ( $userMap as $user => $userGroups ) {
 	$userRow = $puppetTable->body()->row();
-	$userRow->cell( $userHtmlGen( $user ) );
+	$userRow->cell( $userHtmlGen( $user ) )->raw();
 	foreach ( $puppetGroups as $group ) {
 		if ( in_array( $group, $userGroups ) ) {
 			$userRow->cell( 'Yes' );
@@ -121,7 +121,7 @@ foreach ( $ldapGroups as $group ) {
 
 foreach ( $userMap as $user => $userGroups ) {
 	$userRow = $ldapTable->body()->row();
-	$userRow->cell( $userHtmlGen( $user ) );
+	$userRow->cell( $userHtmlGen( $user ) )->raw();
 	foreach ( $ldapGroups as $group ) {
 		if ( in_array( $group, $userGroups ) ) {
 			$userRow->cell( 'Yes' );
