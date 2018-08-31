@@ -108,11 +108,13 @@ echo (
 						return $groupMap;
 					} )(),
 					MG_LDAP_CLOUD => ( $ldapMagicFetcherGenerator( MG_LDAP_CLOUD ) )(),
-					MG_GERRIT => ( function () use ( $groupsToCheck ) {
+					MG_GERRIT => ( function() use ( $groupsToCheck ) {
 						$groupMap = [];
-						foreach ( $groupsToCheck[MG_GERRIT] as $groupId => $groupName ) {
-							// We can't actually fetch gerrit groups :( so just return an empty array...
-							$groupMap[$groupName] = null;
+						foreach ( $groupsToCheck[MG_GERRIT] as $groupName ) {
+							$file = __DIR__ . '/data/gerrit_' . $groupName;
+							$data = file_get_contents( $file );
+							$users = explode( "\n", trim( $data ) );
+							$groupMap[$groupName] = array_map( 'trim', $users );
 						}
 						return $groupMap;
 					} )(),
@@ -125,7 +127,7 @@ echo (
 							$groupMap[$groupName] = array_map( 'trim', $users );
 						}
 						return $groupMap;
-					} )()
+					} )(),
 				]
 			)
 		),
@@ -151,6 +153,12 @@ echo (
 				return $name;
 			},
 			MG_PHABRICATOR => function ( $name ) {
+				if ( $name === 'WMF-NDA' ) {
+					return '<a href="https://phabricator.wikimedia.org/project/members/30/" >NDA</a>';
+				}
+				if ( $name === 'Security' ) {
+					return '<a href="https://phabricator.wikimedia.org/project/members/61/" >Security</a>';
+				}
 				return $name;
 			},
 		],
