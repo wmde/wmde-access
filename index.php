@@ -29,6 +29,26 @@ $metaGroupNames = [
 	META_GROUP_GERRIT => 'Gerrit',
 ];
 
+$defaultMetaGroupFormatter = function ( $name ) {
+	return $name;
+};
+$metaGroupFormatters = [
+	META_GROUP_LDAP_MAGIC => $defaultMetaGroupFormatter,
+	META_GROUP_LDAP_PUPPET => $defaultMetaGroupFormatter,
+	META_GROUP_LDAP_CLOUD => function ( $name ) {
+		$cloudVpsLinkHtmlGen = function ( $name ) {
+			return '<a href="https://tools.wmflabs.org/openstack-browser/project/' . $name . '">' . $name . '</a>';
+		};
+		return $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $name ) );
+	},
+	META_GROUP_GERRIT => function ( $name ) {
+		if ( $name === 'Gerrit Managers' ) {
+			return '<a href="https://gerrit.wikimedia.org/r/#/admin/groups/119,members" >Gerrit Managers</a>';
+		}
+		return $name;
+	},
+];
+
 $groupsToCheck = [
 	META_GROUP_LDAP_PUPPET => [
 		'deployment',
@@ -78,7 +98,9 @@ echo (
 					$cache
 				)
 			)->getGroupMap()
-		) ),
+			)
+		),
+		$metaGroupFormatters,
 		META_GROUP_LDAP_MAGIC,
 		'wmde'
 	)

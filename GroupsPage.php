@@ -9,11 +9,17 @@ use Tlr\Tables\Elements\Table;
 class GroupsPage {
 
 	private $data;
+	private $metaGroupFormatters;
 	private $sourceMetaGroup;
 	private $sourceGroup;
 
-	public function __construct( GroupsData $data, $sourceMetaGroup, $sourceGroup ) {
+	public function __construct(
+		GroupsData $data,
+		$metaGroupFormatters,
+		$sourceMetaGroup,
+		$sourceGroup ) {
 		$this->data = $data;
+		$this->metaGroupFormatters = $metaGroupFormatters;
 		$this->sourceMetaGroup = $sourceMetaGroup;
 		$this->sourceGroup = $sourceGroup;
 	}
@@ -58,7 +64,8 @@ class GroupsPage {
 		};
 		foreach ( $metaGroupKeys as $metaKey ) {
 			foreach ( $this->data->getGroupsInMetaGroup( $metaKey ) as $group ) {
-				$headerRow->cell( $rotateHtmlWrapper ( $this->formatGroup( $metaKey, $group ) ) )
+				$headerRow
+					->cell( $rotateHtmlWrapper ( $this->metaGroupFormatters[$metaKey]( $group ) ) )
 					->raw()
 					->classes( [ 'group-name', 'rotate' ] );
 			}
@@ -81,34 +88,13 @@ class GroupsPage {
 						$userRow->cell( '' ) ->class( 'access-no' );
 					}
 					if ( $userInGroup === null ) {
-						$userRow->cell( 'N/A' ) ->class( 'access-unknown' );
+						$userRow->cell( '?' ) ->class( 'access-unknown' );
 					}
 				}
 			}
 		}
 
 		return $table;
-	}
-
-	private function formatGroup( $metaKey, $group ) {
-		// TODO maybe this formatting logic should be somewhere else?
-		if ( $metaKey === META_GROUP_LDAP_CLOUD ) {
-			$cloudVpsLinkHtmlGen = function ( $project ) {
-				return '<a href="https://tools.wmflabs.org/openstack-browser/project/' . $project . '">' . $project . '</a>';
-			};
-
-			// If this is a cloud VPS project
-			if ( substr( $group, 0, 8 ) === 'project-' ) {
-				return $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $group ) );
-			}
-			return $group;
-		}
-
-		if ( $group === 'Gerrit Managers' ) {
-			return '<a href="https://gerrit.wikimedia.org/r/#/admin/groups/119,members" >' . $group . '</a>';
-		}
-
-		return $group;
 	}
 
 	private function getHtmlForUser ( $user ) {
