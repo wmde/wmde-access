@@ -17,12 +17,22 @@ class GroupMapFetcher {
 	public function getGroupMap() {
 		return [
 			META_GROUP_LDAP_PUPPET => $this->getLdapPuppetGroups(),
-			META_GROUP_LDAP_CLOUD => $this->getLdapMisc( META_GROUP_LDAP_CLOUD ),
-			META_GROUP_LDAP_MAGIC => $this->getLdapMisc( META_GROUP_LDAP_MAGIC ),
+			META_GROUP_LDAP_CLOUD => $this->getLdapMiscGroups( META_GROUP_LDAP_CLOUD ),
+			META_GROUP_LDAP_MAGIC => $this->getLdapMiscGroups( META_GROUP_LDAP_MAGIC ),
+			META_GROUP_GERRIT => $this->getGerritGroups(),
 		];
 	}
 
-	private function getLdapMisc( $metaGroup ) {
+	private function getGerritGroups() {
+		$groupMap = [];
+		foreach ( $this->groupsToCheck[META_GROUP_GERRIT] as $groupId => $groupName ) {
+			// We can't actually fetch gerrit groups :( so just return an empty array...
+			$groupMap[$groupName] = null;
+		}
+		return $groupMap;
+	}
+
+	private function getLdapMiscGroups( $metaGroup ) {
 		$groupMap = [];
 		foreach ( $this->groupsToCheck[$metaGroup] as $group ) {
 			$html = $this->cache->get_data(

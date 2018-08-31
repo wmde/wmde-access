@@ -20,11 +20,13 @@ $cache->cache_time = 60*5;
 const META_GROUP_LDAP_PUPPET = 'ldap-puppet';
 const META_GROUP_LDAP_MAGIC = 'ldap-magic';
 const META_GROUP_LDAP_CLOUD = 'ldap-cloud-projects';
+const META_GROUP_GERRIT = 'gerrit';
 
 $metaGroupNames = [
 	META_GROUP_LDAP_MAGIC => 'LDAP magic',
 	META_GROUP_LDAP_PUPPET => 'LDAP operations-puppet',
 	META_GROUP_LDAP_CLOUD => 'Cloud VPS',
+	META_GROUP_GERRIT => 'Gerrit',
 ];
 
 $groupsToCheck = [
@@ -55,6 +57,9 @@ $groupsToCheck = [
 		'project-wikidata-query',
 		'project-wikidataconcepts',
 		'project-wmde-dashboards',
+	],
+	META_GROUP_GERRIT => [
+		'119' => 'Gerrit Managers'
 	],
 ];
 

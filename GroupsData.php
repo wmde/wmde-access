@@ -32,7 +32,16 @@ class GroupsData {
 		return $this->groupMap[$metaKey][$group];
 	}
 
+	/**
+	 * @param string $user
+	 * @param string $metaKey one of the constants
+	 * @param string $group
+	 * @return bool|null bool if we know the user is in or not in the group, null if we don't know
+	 */
 	public function userIsInGroup( $user, $metaKey, $group ) {
+		if ( $this->groupMap[$metaKey][$group] === null ) {
+			return null;
+		}
 		return in_array( $user, $this->groupMap[$metaKey][$group] );
 	}
 

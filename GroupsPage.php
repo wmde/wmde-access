@@ -73,10 +73,15 @@ class GroupsPage {
 
 			foreach( $metaGroupKeys as $metaKey ) {
 				foreach ( $this->data->getGroupsInMetaGroup( $metaKey ) as $group ) {
-					if ( $this->data->userIsInGroup( $user, $metaKey, $group ) ) {
+					$userInGroup = $this->data->userIsInGroup( $user, $metaKey, $group );
+					if ( $userInGroup === true ) {
 						$userRow->cell( 'Yes' )->class( 'access-yes' );
-					} else {
+					}
+					if ( $userInGroup === false ) {
 						$userRow->cell( '' ) ->class( 'access-no' );
+					}
+					if ( $userInGroup === null ) {
+						$userRow->cell( 'N/A' ) ->class( 'access-unknown' );
 					}
 				}
 			}
@@ -97,6 +102,10 @@ class GroupsPage {
 				return $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $group ) );
 			}
 			return $group;
+		}
+
+		if ( $group === 'Gerrit Managers' ) {
+			return '<a href="https://gerrit.wikimedia.org/r/#/admin/groups/119,members" >' . $group . '</a>';
 		}
 
 		return $group;
