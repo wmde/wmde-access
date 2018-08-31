@@ -1,56 +1,29 @@
 <?php
 
+use Symfony\Component\Yaml\Yaml;
 use WmdeAccess\CachedDoCurl;
 use WmdeAccess\GroupsData;
 use WmdeAccess\GroupsPage;
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/CachedDoCurl.php';
-require_once __DIR__ . '/GroupMapFetcher.php';
 require_once __DIR__ . '/GroupsData.php';
 require_once __DIR__ . '/GroupsPage.php';
 
-$cache = new CachedDoCurl();
-$cache->cache_path = 'cache/';
-$cache->cache_time = 60*5;
+$cachedRequests = new CachedDoCurl();
+$cachedRequests->cache_path = 'cache/';
+$cachedRequests->cache_time = 60*5;
 
 ///////////////////////////////////////////////////////////////////////////
 /// Config
 
-const META_GROUP_LDAP_PUPPET = 'ldap-puppet';
-const META_GROUP_LDAP_MAGIC = 'ldap-magic';
-const META_GROUP_LDAP_CLOUD = 'ldap-cloud-projects';
-const META_GROUP_GERRIT = 'gerrit';
-
-$metaGroupNames = [
-	META_GROUP_LDAP_MAGIC => 'LDAP magic',
-	META_GROUP_LDAP_PUPPET => 'LDAP operations-puppet',
-	META_GROUP_LDAP_CLOUD => 'Cloud VPS',
-	META_GROUP_GERRIT => 'Gerrit',
-];
-
-$defaultMetaGroupFormatter = function ( $name ) {
-	return $name;
-};
-$metaGroupFormatters = [
-	META_GROUP_LDAP_MAGIC => $defaultMetaGroupFormatter,
-	META_GROUP_LDAP_PUPPET => $defaultMetaGroupFormatter,
-	META_GROUP_LDAP_CLOUD => function ( $name ) {
-		$cloudVpsLinkHtmlGen = function ( $name ) {
-			return '<a href="https://tools.wmflabs.org/openstack-browser/project/' . $name . '">' . $name . '</a>';
-		};
-		return $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $name ) );
-	},
-	META_GROUP_GERRIT => function ( $name ) {
-		if ( $name === 'Gerrit Managers' ) {
-			return '<a href="https://gerrit.wikimedia.org/r/#/admin/groups/119,members" >Gerrit Managers</a>';
-		}
-		return $name;
-	},
-];
+const MG_LDAP_PUPPET = 'ldap-puppet';
+const MG_LDAP_MAGIC = 'ldap-magic';
+const MG_LDAP_CLOUD = 'ldap-cloud-projects';
+const MG_GERRIT = 'gerrit';
 
 $groupsToCheck = [
-	META_GROUP_LDAP_PUPPET => [
+	MG_LDAP_PUPPET => [
 		'deployment',
 		'mw-log-readers',
 		'researchers',
@@ -60,13 +33,13 @@ $groupsToCheck = [
 		'contint-docker',
 		'releasers-wikidiff2',
 	],
-	META_GROUP_LDAP_MAGIC => [
+	MG_LDAP_MAGIC => [
 		// ldap groups not in ops puppet
 		'wmde',
 		'nda',
 		'grafana-admin',
 	],
-	META_GROUP_LDAP_CLOUD => [
+	MG_LDAP_CLOUD => [
 		// 'project-bastion', // Not working...
 		'project-catgraph',
 		'project-deployment-prep',
@@ -78,10 +51,26 @@ $groupsToCheck = [
 		'project-wikidataconcepts',
 		'project-wmde-dashboards',
 	],
-	META_GROUP_GERRIT => [
+	MG_GERRIT => [
 		'119' => 'Gerrit Managers'
 	],
 ];
+
+$ldapMagicFetcherGenerator = function ( $metaGroup ) use ( $groupsToCheck, $cachedRequests ) {
+	return function () use ( $groupsToCheck, $metaGroup, $cachedRequests ) {
+		$groupMap = [];
+		foreach ( $groupsToCheck[$metaGroup] as $group ) {
+			$html = $cachedRequests->get_data(
+				'wmf-ldap-' . $group,
+				'https://tools.wmflabs.org/ldap/group/' . $group
+			);
+			preg_match_all( '/"\/ldap\/user\/([a-zA-Z0-9-]*)"\>/', $html, $userMatches );
+			$groupMap[$group] = $userMatches[1];
+		}
+		return $groupMap;
+	};
+};
+$metaGroupFetchers = null;
 
 ///////////////////////////////////////////////////////////////////////////
 /// Output
@@ -91,17 +80,60 @@ echo (
 	new GroupsPage(
 		(
 			new GroupsData(
-			$metaGroupNames,
-			(
-				new \WmdeAccess\GroupMapFetcher(
-					$groupsToCheck,
-					$cache
-				)
-			)->getGroupMap()
+				[
+					MG_LDAP_MAGIC => 'LDAP magic',
+					MG_LDAP_PUPPET => 'LDAP operations-puppet',
+					MG_LDAP_CLOUD => 'Cloud VPS',
+					MG_GERRIT => 'Gerrit',
+				],
+				[
+					MG_LDAP_MAGIC => ( $ldapMagicFetcherGenerator( MG_LDAP_MAGIC ) )(),
+					MG_LDAP_PUPPET => ( function() use ( $cachedRequests, $groupsToCheck ) {
+						$opsData = Yaml::parse(
+							$cachedRequests->get_data(
+								'wmf-operations-puppet-admin-data',
+								'https://raw.githubusercontent.com/wikimedia/puppet/production/modules/admin/data/data.yaml'
+							)
+						);
+						$groupMap = [];
+						foreach( $groupsToCheck[MG_LDAP_PUPPET] as $group ) {
+							$groupMap[$group] = $opsData['groups'][$group]['members'];
+						}
+						return $groupMap;
+					} )(),
+					MG_LDAP_CLOUD => ( $ldapMagicFetcherGenerator( MG_LDAP_CLOUD ) )(),
+					MG_GERRIT => ( function () use ( $groupsToCheck ) {
+						$groupMap = [];
+						foreach ( $groupsToCheck[MG_GERRIT] as $groupId => $groupName ) {
+							// We can't actually fetch gerrit groups :( so just return an empty array...
+							$groupMap[$groupName] = null;
+						}
+						return $groupMap;
+					} )(),
+				]
 			)
 		),
-		$metaGroupFormatters,
-		META_GROUP_LDAP_MAGIC,
+		[
+			MG_LDAP_MAGIC => function ( $name ) {
+				return $name;
+			},
+			MG_LDAP_PUPPET => function ( $name ) {
+				return $name;
+			},
+			MG_LDAP_CLOUD => function ( $name ) {
+				$cloudVpsLinkHtmlGen = function ( $name ) {
+					return '<a href="https://tools.wmflabs.org/openstack-browser/project/' . $name . '">' . $name . '</a>';
+				};
+				return $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $name ) );
+			},
+			MG_GERRIT => function ( $name ) {
+				if ( $name === 'Gerrit Managers' ) {
+					return '<a href="https://gerrit.wikimedia.org/r/#/admin/groups/119,members" >Gerrit Managers</a>';
+				}
+				return $name;
+			},
+		],
+		MG_LDAP_MAGIC,
 		'wmde'
 	)
 )->getHtml();
