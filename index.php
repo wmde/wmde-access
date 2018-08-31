@@ -113,6 +113,8 @@ echo (
 				]
 			)
 		),
+		'<h1>WMDE groups</h1>' .
+		'<p>Code for this tool can be found @ <a href=\'https://github.com/addshore/wmde-access\' >https://github.com/addshore/wmde-access</a></p>',
 		[
 			MG_LDAP_MAGIC => function ( $name ) {
 				return $name;

@@ -9,16 +9,19 @@ use Tlr\Tables\Elements\Table;
 class GroupsPage {
 
 	private $data;
+	private $headerHtml;
 	private $metaGroupFormatters;
 	private $sourceMetaGroup;
 	private $sourceGroup;
 
 	public function __construct(
 		GroupsData $data,
+		$headerHtml,
 		$metaGroupFormatters,
 		$sourceMetaGroup,
 		$sourceGroup ) {
 		$this->data = $data;
+		$this->headerHtml = $headerHtml;
 		$this->metaGroupFormatters = $metaGroupFormatters;
 		$this->sourceMetaGroup = $sourceMetaGroup;
 		$this->sourceGroup = $sourceGroup;
@@ -32,8 +35,7 @@ class GroupsPage {
 		$s .=  "<link rel=\"stylesheet\" href=\"main.css\">";
 		$s .=  "</head>";
 		$s .=  "<body>";
-		$s .=  "<h1>WMDE groups</h1>";
-		$s .=  "<p>Code for this tool can be found @ <a href='https://github.com/addshore/wmde-access' >https://github.com/addshore/wmde-access</a></p>";
+		$s .= $this->headerHtml;
 		$s .=  $this->getTable()->render();
 		$s .=  "</body>";
 		$s .=  "</html>";
