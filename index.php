@@ -21,6 +21,7 @@ const MG_LDAP_PUPPET = 'ldap-puppet';
 const MG_LDAP_MAGIC = 'ldap-magic';
 const MG_LDAP_CLOUD = 'ldap-cloud-projects';
 const MG_GERRIT = 'gerrit';
+const MG_PHABRICATOR = 'phabricator';
 
 $groupsToCheck = [
 	MG_LDAP_PUPPET => [
@@ -54,6 +55,10 @@ $groupsToCheck = [
 	MG_GERRIT => [
 		'119' => 'Gerrit Managers'
 	],
+	MG_PHABRICATOR => [
+		'61' => 'WMF-NDA',
+		'30' => 'Security',
+	],
 ];
 
 $ldapMagicFetcherGenerator = function ( $metaGroup ) use ( $groupsToCheck, $cachedRequests ) {
@@ -85,6 +90,7 @@ echo (
 					MG_LDAP_PUPPET => 'LDAP operations-puppet',
 					MG_LDAP_CLOUD => 'Cloud VPS',
 					MG_GERRIT => 'Gerrit',
+					MG_PHABRICATOR => 'Phabricator',
 				],
 				[
 					MG_LDAP_MAGIC => ( $ldapMagicFetcherGenerator( MG_LDAP_MAGIC ) )(),
@@ -110,6 +116,16 @@ echo (
 						}
 						return $groupMap;
 					} )(),
+					MG_PHABRICATOR => ( function() use ( $groupsToCheck ) {
+						$groupMap = [];
+						foreach ( $groupsToCheck[MG_PHABRICATOR] as $groupName ) {
+							$file = __DIR__ . '/data/phabricator_' . $groupName;
+							$data = file_get_contents( $file );
+							$users = explode( "\n", trim( $data ) );
+							$groupMap[$groupName] = array_map( 'trim', $users );
+						}
+						return $groupMap;
+					} )()
 				]
 			)
 		),
@@ -132,6 +148,9 @@ echo (
 				if ( $name === 'Gerrit Managers' ) {
 					return '<a href="https://gerrit.wikimedia.org/r/#/admin/groups/119,members" >Gerrit Managers</a>';
 				}
+				return $name;
+			},
+			MG_PHABRICATOR => function ( $name ) {
 				return $name;
 			},
 		],

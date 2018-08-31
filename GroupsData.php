@@ -42,6 +42,7 @@ class GroupsData {
 		if ( $this->groupMap[$metaKey][$group] === null ) {
 			return null;
 		}
+
 		return in_array( $user, $this->groupMap[$metaKey][$group] );
 	}
 
