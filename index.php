@@ -1,16 +1,16 @@
 <?php
 
-use WmdeAccess\Cache;
+use WmdeAccess\CachedDoCurl;
 use WmdeAccess\GroupsData;
 use WmdeAccess\GroupsPage;
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/Cache.php';
+require_once __DIR__ . '/CachedDoCurl.php';
 require_once __DIR__ . '/GroupMapFetcher.php';
 require_once __DIR__ . '/GroupsData.php';
 require_once __DIR__ . '/GroupsPage.php';
 
-$cache = new Cache();
+$cache = new CachedDoCurl();
 $cache->cache_path = 'cache/';
 $cache->cache_time = 60*5;
 
@@ -22,8 +22,8 @@ const META_GROUP_LDAP_MAGIC = 'ldap-magic';
 const META_GROUP_LDAP_CLOUD = 'ldap-cloud-projects';
 
 $metaGroupNames = [
-	META_GROUP_LDAP_PUPPET => 'LDAP operations-puppet',
 	META_GROUP_LDAP_MAGIC => 'LDAP magic',
+	META_GROUP_LDAP_PUPPET => 'LDAP operations-puppet',
 	META_GROUP_LDAP_CLOUD => 'Cloud VPS',
 ];
 

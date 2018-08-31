@@ -4,7 +4,7 @@ namespace WmdeAccess;
 
 use Gilbitron\Util\SimpleCache;
 
-class Cache extends SimpleCache {
+class CachedDoCurl extends SimpleCache {
 
 	//Helper function for retrieving data from url
 	public function do_curl($url)
