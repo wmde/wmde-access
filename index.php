@@ -1,6 +1,8 @@
 <?php
 
 use WmdeAccess\Cache;
+use WmdeAccess\GroupsData;
+use WmdeAccess\GroupsPage;
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/Cache.php';
@@ -86,37 +88,9 @@ foreach ( [ META_GROUP_LDAP_MAGIC, META_GROUP_LDAP_CLOUD ] as $metaGroup ) {
 // TODO gerrit groups??
 
 ///////////////////////////////////////////////////////////////////////////
-/// Create user map
-
-$userMap = [];
-
-// TODO don't hardcode WMDE...
-foreach ( $groupMap[META_GROUP_LDAP_MAGIC]['wmde'] as $wmdeUser ) {
-	foreach ( $groupMap as $metaGroup => $innerGroupMap ) {
-		foreach ( $innerGroupMap as $group => $groupUsers ) {
-			if ( in_array( $wmdeUser, $groupUsers ) ) {
-				$userMap[$wmdeUser][$metaGroup][] = $group;
-			}
-		}
-	}
-}
-
-///////////////////////////////////////////////////////////////////////////
-/// Create some tables?
-
-$data = new \WmdeAccess\GroupsData( $metaGroupNames, $groupMap, $userMap );
-
-$_numOfCloudVpsProjects = function ( $projects ) {
-	$counter = 0;
-	foreach ( $projects as $project ) {
-		if ( substr( $project, 0, 8 ) === 'project-' ) {
-			$counter++;
-		}
-	}
-	return $counter;
-};
-
-///////////////////////////////////////////////////////////////////////////
 /// Output
 
-echo ( new \WmdeAccess\GroupsPage( $data ) )->getHtml();
+$data = new GroupsData( $metaGroupNames, $groupMap );
+
+// TODO don't hardcode wmde source group here
+echo ( new GroupsPage( $data, META_GROUP_LDAP_MAGIC, 'wmde' ) )->getHtml();

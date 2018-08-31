@@ -6,12 +6,10 @@ class GroupsData {
 
 	private $metaGroupNames;
 	private $groupMap;
-	private $userMap;
 
-	public function __construct( array $metaGroupNames, array $groupMap, array $userMap ) {
+	public function __construct( array $metaGroupNames, array $groupMap) {
 		$this->metaGroupNames = $metaGroupNames;
 		$this->groupMap = $groupMap;
-		$this->userMap = $userMap;
 	}
 
 	public function getMetaGroupKeys() {
@@ -30,12 +28,12 @@ class GroupsData {
 		return array_keys( $this->groupMap[$key] );
 	}
 
-	public function getUsers() {
-		return array_keys( $this->userMap );
+	public function getUsersInGroup ( $metaKey, $group ) {
+		return $this->groupMap[$metaKey][$group];
 	}
 
 	public function userIsInGroup( $user, $metaKey, $group ) {
-		return in_array( $group, $this->userMap[$user][$metaKey] );
+		return in_array( $user, $this->groupMap[$metaKey][$group] );
 	}
 
 }

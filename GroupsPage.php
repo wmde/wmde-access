@@ -9,9 +9,13 @@ use Tlr\Tables\Elements\Table;
 class GroupsPage {
 
 	private $data;
+	private $sourceMetaGroup;
+	private $sourceGroup;
 
-	public function __construct( GroupsData $data ) {
+	public function __construct( GroupsData $data, $sourceMetaGroup, $sourceGroup ) {
 		$this->data = $data;
+		$this->sourceMetaGroup = $sourceMetaGroup;
+		$this->sourceGroup = $sourceGroup;
 	}
 
 	public function getHtml() {
@@ -61,7 +65,8 @@ class GroupsPage {
 		}
 
 		// Create the user rows
-		foreach ( $this->data->getUsers() as $user ) {
+		$users = $this->data->getUsersInGroup( $this->sourceMetaGroup, $this->sourceGroup );
+		foreach ( $users as $user ) {
 			/** @var BodyRow $userRow */
 			$userRow = $table->body()->row();
 			$userRow->cell( $this->getHtmlForUser( $user ) )->raw();
