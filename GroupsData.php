@@ -7,7 +7,7 @@ class GroupsData {
 	private $metaGroupNames;
 	private $groupMap;
 
-	public function __construct( array $metaGroupNames, array $groupMap) {
+	public function __construct( array $metaGroupNames, array $groupMap ) {
 		$this->metaGroupNames = $metaGroupNames;
 		$this->groupMap = $groupMap;
 	}

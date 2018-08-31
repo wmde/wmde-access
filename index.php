@@ -6,14 +6,13 @@ use WmdeAccess\GroupsPage;
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/Cache.php';
+require_once __DIR__ . '/GroupMapFetcher.php';
 require_once __DIR__ . '/GroupsData.php';
 require_once __DIR__ . '/GroupsPage.php';
 
 $cache = new Cache();
 $cache->cache_path = 'cache/';
 $cache->cache_time = 60*5;
-
-$groupMap = [];
 
 ///////////////////////////////////////////////////////////////////////////
 /// Config
@@ -60,37 +59,22 @@ $groupsToCheck = [
 ];
 
 ///////////////////////////////////////////////////////////////////////////
-/// Get group map
-
-$opsData = \Symfony\Component\Yaml\Yaml::parse(
-	$cache->get_data(
-		'wmf-operations-puppet-admin-data',
-		'https://raw.githubusercontent.com/wikimedia/puppet/production/modules/admin/data/data.yaml'
-	)
-);
-foreach( $groupsToCheck[META_GROUP_LDAP_PUPPET] as $group ) {
-	$groupMap[META_GROUP_LDAP_PUPPET][$group] = $opsData['groups'][$group]['members'];
-}
-
-foreach ( [ META_GROUP_LDAP_MAGIC, META_GROUP_LDAP_CLOUD ] as $metaGroup ) {
-	foreach ( $groupsToCheck[$metaGroup] as $group ) {
-		$html = $cache->get_data(
-			'wmf-ldap-' . $group,
-			'https://tools.wmflabs.org/ldap/group/' . $group
-		);
-		preg_match_all( '/"\/ldap\/user\/([a-zA-Z0-9-]*)"\>/', $html, $userMatches );
-		$groupMap[$metaGroup][$group] = $userMatches[1];
-	}
-}
-
-// TODO github access??
-
-// TODO gerrit groups??
-
-///////////////////////////////////////////////////////////////////////////
 /// Output
 
-$data = new GroupsData( $metaGroupNames, $groupMap );
-
 // TODO don't hardcode wmde source group here
-echo ( new GroupsPage( $data, META_GROUP_LDAP_MAGIC, 'wmde' ) )->getHtml();
+echo (
+	new GroupsPage(
+		(
+			new GroupsData(
+			$metaGroupNames,
+			(
+				new \WmdeAccess\GroupMapFetcher(
+					$groupsToCheck,
+					$cache
+				)
+			)->getGroupMap()
+		) ),
+		META_GROUP_LDAP_MAGIC,
+		'wmde'
+	)
+)->getHtml();
