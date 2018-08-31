@@ -1,12 +1,11 @@
 <?php
 
-use Tlr\Tables\Elements\Rows\BodyRow;
-use Tlr\Tables\Elements\Rows\HeaderRow;
-use Tlr\Tables\Elements\Table;
 use WmdeAccess\Cache;
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/Cache.php';
+require_once __DIR__ . '/GroupsData.php';
+require_once __DIR__ . '/GroupsPage.php';
 
 $cache = new Cache();
 $cache->cache_path = 'cache/';
@@ -17,33 +16,45 @@ $groupMap = [];
 ///////////////////////////////////////////////////////////////////////////
 /// Config
 
-$puppetGroups = [
-	'deployment',
-	'mw-log-readers',
-	'researchers',
-	'analytics-privatedata-users',
-	'analytics-wmde-users',
-	'contint-admins',
-	'contint-docker',
-	'releasers-wikidiff2',
+const META_GROUP_LDAP_PUPPET = 'ldap-puppet';
+const META_GROUP_LDAP_MAGIC = 'ldap-magic';
+const META_GROUP_LDAP_CLOUD = 'ldap-cloud-projects';
+
+$metaGroupNames = [
+	META_GROUP_LDAP_PUPPET => 'LDAP operations-puppet',
+	META_GROUP_LDAP_MAGIC => 'LDAP magic',
+	META_GROUP_LDAP_CLOUD => 'Cloud VPS',
 ];
 
-$ldapGroups = [
-	// ldap groups not in ops puppet
-	'wmde',
-	'nda',
-	'grafana-admin',
-	// cloud projects
-	// 'project-bastion', // Not working...
-	'project-catgraph',
-	'project-deployment-prep',
-	'project-lizenzhinweisgenerator',
-	'project-mwfileimport',
-	// 'project-tools', // Not working....
-	'project-wikidata-dev',
-	'project-wikidata-query',
-	'project-wikidataconcepts',
-	'project-wmde-dashboards',
+$groupsToCheck = [
+	META_GROUP_LDAP_PUPPET => [
+		'deployment',
+		'mw-log-readers',
+		'researchers',
+		'analytics-privatedata-users',
+		'analytics-wmde-users',
+		'contint-admins',
+		'contint-docker',
+		'releasers-wikidiff2',
+	],
+	META_GROUP_LDAP_MAGIC => [
+		// ldap groups not in ops puppet
+		'wmde',
+		'nda',
+		'grafana-admin',
+	],
+	META_GROUP_LDAP_CLOUD => [
+		// 'project-bastion', // Not working...
+		'project-catgraph',
+		'project-deployment-prep',
+		'project-lizenzhinweisgenerator',
+		'project-mwfileimport',
+		// 'project-tools', // Not working....
+		'project-wikidata-dev',
+		'project-wikidata-query',
+		'project-wikidataconcepts',
+		'project-wmde-dashboards',
+	],
 ];
 
 ///////////////////////////////////////////////////////////////////////////
@@ -55,17 +66,19 @@ $opsData = \Symfony\Component\Yaml\Yaml::parse(
 		'https://raw.githubusercontent.com/wikimedia/puppet/production/modules/admin/data/data.yaml'
 	)
 );
-foreach( $puppetGroups as $group ) {
-	$groupMap[$group] = $opsData['groups'][$group]['members'];
+foreach( $groupsToCheck[META_GROUP_LDAP_PUPPET] as $group ) {
+	$groupMap[META_GROUP_LDAP_PUPPET][$group] = $opsData['groups'][$group]['members'];
 }
 
-foreach ( $ldapGroups as $group ) {
-	$html = $cache->get_data(
-		'wmf-ldap-' . $group,
-		'https://tools.wmflabs.org/ldap/group/' . $group
-	);
-	preg_match_all( '/"\/ldap\/user\/([a-zA-Z0-9-]*)"\>/', $html, $userMatches );
-	$groupMap[$group] = $userMatches[1];
+foreach ( [ META_GROUP_LDAP_MAGIC, META_GROUP_LDAP_CLOUD ] as $metaGroup ) {
+	foreach ( $groupsToCheck[$metaGroup] as $group ) {
+		$html = $cache->get_data(
+			'wmf-ldap-' . $group,
+			'https://tools.wmflabs.org/ldap/group/' . $group
+		);
+		preg_match_all( '/"\/ldap\/user\/([a-zA-Z0-9-]*)"\>/', $html, $userMatches );
+		$groupMap[$metaGroup][$group] = $userMatches[1];
+	}
 }
 
 // TODO github access??
@@ -77,10 +90,13 @@ foreach ( $ldapGroups as $group ) {
 
 $userMap = [];
 
-foreach ( $groupMap['wmde'] as $wmdeUser ) {
-	foreach ( $groupMap as $group => $groupUsers ) {
-		if ( in_array( $wmdeUser, $groupUsers ) ) {
-			$userMap[$wmdeUser][] = $group;
+// TODO don't hardcode WMDE...
+foreach ( $groupMap[META_GROUP_LDAP_MAGIC]['wmde'] as $wmdeUser ) {
+	foreach ( $groupMap as $metaGroup => $innerGroupMap ) {
+		foreach ( $innerGroupMap as $group => $groupUsers ) {
+			if ( in_array( $wmdeUser, $groupUsers ) ) {
+				$userMap[$wmdeUser][$metaGroup][] = $group;
+			}
 		}
 	}
 }
@@ -88,25 +104,7 @@ foreach ( $groupMap['wmde'] as $wmdeUser ) {
 ///////////////////////////////////////////////////////////////////////////
 /// Create some tables?
 
-$userHtmlGen = function ( $user ) {
-	return '<a href="https://tools.wmflabs.org/ldap/user/' . $user . '">' . $user . '<a/>';
-};
-
-$opsLdapGroupHtmlGen = function ( $group ) {
-	return $group;
-};
-
-$ldapGroupHtmlGen = function ( $group ) {
-	$cloudVpsLinkHtmlGen = function ( $project ) {
-		return '<a href="https://tools.wmflabs.org/openstack-browser/project/' . $project . '">' . $project . '</a>';
-	};
-
-	// If this is a cloud VPS project
-	if ( substr( $group, 0, 8 ) === 'project-' ) {
-		return $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $group ) );
-	}
-	return $group;
-};
+$data = new \WmdeAccess\GroupsData( $metaGroupNames, $groupMap, $userMap );
 
 $_numOfCloudVpsProjects = function ( $projects ) {
 	$counter = 0;
@@ -118,69 +116,7 @@ $_numOfCloudVpsProjects = function ( $projects ) {
 	return $counter;
 };
 
-$table = new Table();
-$table->class('table table-striped table-bordered table-hover table-sm');
-
-/** @var HeaderRow $headerRow */
-$headerRow = $table->header()->row();
-$headerRow->cell( '' ); // first cell...
-$headerRow->cell( 'LDAP operations-puppet' )
-	->spanColumns( count( $puppetGroups ) )
-	->class( 'group-type' );
-$headerRow->cell( 'LDAP magic' )
-	->spanColumns( count( $ldapGroups ) - $_numOfCloudVpsProjects( $ldapGroups ) )
-	->class( 'group-type' );
-$headerRow->cell( 'Cloud VPS' )
-	->spanColumns( $_numOfCloudVpsProjects( $ldapGroups ) )
-	->class( 'group-type' );
-
-$headerRow = $table->header()->row();
-$headerRow->cell( '' ); // first cell...
-$rotateHtmlWrapper = function( $innerHtml ) {
-	return '<div>' . $innerHtml . '</div>';
-};
-foreach ( $puppetGroups as $group ) {
-	$headerRow->cell( $rotateHtmlWrapper ( $opsLdapGroupHtmlGen( $group ) ) )
-		->raw()
-		->classes( [ 'group-name', 'rotate' ] );
-}
-foreach ( $ldapGroups as $group ) {
-	$headerRow->cell( $rotateHtmlWrapper ( $ldapGroupHtmlGen( $group ) ) )
-		->raw()
-		->classes( [ 'group-name', 'rotate' ] );
-}
-
-foreach ( $userMap as $user => $userGroups ) {
-	/** @var BodyRow $userRow */
-	$userRow = $table->body()->row();
-	$userRow->cell( $userHtmlGen( $user ) )->raw();
-	foreach ( $puppetGroups as $group ) {
-		if ( in_array( $group, $userGroups ) ) {
-			$userRow->cell( 'Yes' )->class( 'access-yes' );
-		} else {
-			$userRow->cell( '' ) ->class( 'access-no' );
-		}
-	}
-	foreach ( $ldapGroups as $group ) {
-		if ( in_array( $group, $userGroups ) ) {
-			$userRow->cell( 'Yes' )->class( 'access-yes' );
-		} else {
-			$userRow->cell( '' )->class( 'access-no' );
-		}
-	}
-}
-
 ///////////////////////////////////////////////////////////////////////////
-/// Ouput
+/// Output
 
-echo "<html>";
-echo "<head>";
-echo "<link rel=\"stylesheet\" href=\"https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css\">";
-echo "<link rel=\"stylesheet\" href=\"main.css\">";
-echo "</head>";
-echo "<body>";
-echo "<h1>WMDE groups</h1>";
-echo "<p>Code for this tool can be found @ <a href='https://github.com/addshore/wmde-access' >https://github.com/addshore/wmde-access</a></p>";
-echo $table->render();
-echo "</body>";
-echo "</html>";
+echo ( new \WmdeAccess\GroupsPage( $data ) )->getHtml();
