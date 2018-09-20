@@ -162,6 +162,9 @@ echo (
 				if ( $name === 'Security' ) {
 					return '<a href="https://phabricator.wikimedia.org/project/members/61/" >Security</a>';
 				}
+				if ( $name === 'Project-Admins' ) {
+					return '<a href="https://phabricator.wikimedia.org/project/members/1776/" >Project-Admins</a>';
+				}
 				return $name;
 			},
 		],
