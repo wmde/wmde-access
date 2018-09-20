@@ -57,6 +57,7 @@ $groupsToCheck = [
 		'119' => 'Gerrit Managers'
 	],
 	MG_PHABRICATOR => [
+		'1776' => 'Project-Admins',
 		'61' => 'WMF-NDA',
 		'30' => 'Security',
 	],
