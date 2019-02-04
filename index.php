@@ -158,10 +158,10 @@ echo (
 			},
 			MG_PHABRICATOR => function ( $name ) {
 				if ( $name === 'WMF-NDA' ) {
-					return '<a href="https://phabricator.wikimedia.org/project/members/30/" >NDA</a>';
+					return '<a href="https://phabricator.wikimedia.org/project/members/61/" >NDA</a>';
 				}
 				if ( $name === 'Security' ) {
-					return '<a href="https://phabricator.wikimedia.org/project/members/61/" >Security</a>';
+					return '<a href="https://phabricator.wikimedia.org/project/members/30/" >Security</a>';
 				}
 				if ( $name === 'Project-Admins' ) {
 					return '<a href="https://phabricator.wikimedia.org/project/members/1776/" >Project-Admins</a>';
