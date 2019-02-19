@@ -44,12 +44,10 @@ $groupsToCheck = [
 		'project-catgraph',
 		'project-deployment-prep',
 		'project-lizenzhinweisgenerator',
-		'project-mwfileimport',
 		// 'project-tools', // Not working....
 		'project-wikidata-dev',
 		'project-wikidata-federation',
 		'project-wikidata-query',
-		'project-wikidataconcepts',
 		'project-wmde-dashboards',
 	],
 	MG_GERRIT => [
