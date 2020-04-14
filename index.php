@@ -26,6 +26,7 @@ const MG_PHABRICATOR = 'phabricator';
 $groupsToCheck = [
 	MG_LDAP_PUPPET => [
 		'deployment',
+		'wdqs-admins',
 		'researchers',
 		'analytics-privatedata-users',
 		'analytics-wmde-users',
