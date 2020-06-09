@@ -100,7 +100,7 @@ class GroupsPage {
 	}
 
 	private function getHtmlForUser ( $user ) {
-		return '<a href="https://tools.wmflabs.org/ldap/user/' . $user . '">' . $user . '<a/>';
+		return '<a href="https://ldap.toolforge.org/user/' . $user . '">' . $user . '<a/>';
 	}
 
 }

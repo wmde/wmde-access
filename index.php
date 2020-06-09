@@ -66,9 +66,9 @@ $ldapMagicFetcherGenerator = function ( $metaGroup ) use ( $groupsToCheck, $cach
 		foreach ( $groupsToCheck[$metaGroup] as $group ) {
 			$html = $cachedRequests->get_data(
 				'wmf-ldap-' . $group,
-				'https://tools.wmflabs.org/ldap/group/' . $group
+				'https://ldap.toolforge.org/group/' . $group
 			);
-			preg_match_all( '/"\/ldap\/user\/([a-zA-Z0-9-]*)"\>/', $html, $userMatches );
+			preg_match_all( '/"\/user\/([a-zA-Z0-9-]*)"\>/', $html, $userMatches );
 			$groupMap[$group] = $userMatches[1];
 		}
 		return $groupMap;
@@ -142,7 +142,7 @@ echo (
 			},
 			MG_LDAP_CLOUD => function ( $name ) {
 				$cloudVpsLinkHtmlGen = function ( $name ) {
-					return '<a href="https://tools.wmflabs.org/openstack-browser/project/' . $name . '">' . $name . '</a>';
+					return '<a href="https://openstack-browser.toolforge.org/project/' . $name . '">' . $name . '</a>';
 				};
 				return $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $name ) );
 			},
