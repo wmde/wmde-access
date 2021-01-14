@@ -27,7 +27,6 @@ $groupsToCheck = [
 	MG_LDAP_PUPPET => [
 		'deployment',
 		'wdqs-admins',
-		'researchers',
 		'analytics-privatedata-users',
 		'analytics-wmde-users',
 		'contint-admins',
