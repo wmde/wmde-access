@@ -44,7 +44,6 @@ $groupsToCheck = [
 		'project-lizenzhinweisgenerator',
 		// 'project-tools', // Not working....
 		'project-wikidata-dev',
-		'project-wikidata-federation',
 		'project-wikidata-query',
 		'project-wmde-dashboards',
 	],
