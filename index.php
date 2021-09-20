@@ -37,7 +37,6 @@ $groupsToCheck = [
 		// ldap groups not in ops puppet
 		'wmde',
 		'nda',
-		'grafana-admin',
 	],
 	MG_LDAP_CLOUD => [
 		// 'project-bastion', // Not working...
