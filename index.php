@@ -31,6 +31,7 @@ $groupsToCheck = [
 		'analytics-wmde-users',
 		'contint-admins',
 		'contint-docker',
+		'releasers-wikibase',
 		'releasers-wikidiff2',
 	],
 	MG_LDAP_MAGIC => [
