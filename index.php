@@ -129,7 +129,7 @@ echo (
 			)
 		),
 		'<h1>WMDE groups</h1>' .
-		'<p>Code for this tool can be found @ <a href=\'https://github.com/addshore/wmde-access\' >https://github.com/addshore/wmde-access</a></p>' .
+		'<p>Code for this tool can be found @ <a href=\'https://github.com/wmde/wmde-access\' >https://github.com/wmde/wmde-access</a></p>' .
 		'<p>\'Live\' data on this page is cached for 5 minutes. Some data (Gerrit & Phabricator) is manually maintained.</p>',
 		[
 			MG_LDAP_MAGIC => function ( $name ) {
