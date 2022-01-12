@@ -77,9 +77,16 @@ $metaGroupFetchers = null;
 ///////////////////////////////////////////////////////////////////////////
 /// Output
 
+$templateLoader = new \Twig\Loader\FilesystemLoader( 'templates' );
+$twig = new \Twig\Environment(
+	$templateLoader
+);
+$template = $twig->load( 'index.twig' );
+
 // TODO don't hardcode wmde source group here
 echo (
 	new GroupsPage(
+		$template,
 		(
 			new GroupsData(
 				[
