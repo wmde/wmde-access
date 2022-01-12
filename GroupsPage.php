@@ -5,6 +5,7 @@ namespace WmdeAccess;
 use Tlr\Tables\Elements\Rows\BodyRow;
 use Tlr\Tables\Elements\Rows\HeaderRow;
 use Tlr\Tables\Elements\Table;
+use Twig\TemplateWrapper;
 
 class GroupsPage {
 
@@ -14,12 +15,19 @@ class GroupsPage {
 	private $sourceMetaGroup;
 	private $sourceGroup;
 
+	/**
+	 * @var TemplateWrapper
+	 */
+	private $template;
+
 	public function __construct(
+		TemplateWrapper $template,
 		GroupsData $data,
 		$headerHtml,
 		$metaGroupFormatters,
 		$sourceMetaGroup,
 		$sourceGroup ) {
+		$this->template = $template;
 		$this->data = $data;
 		$this->headerHtml = $headerHtml;
 		$this->metaGroupFormatters = $metaGroupFormatters;
@@ -28,6 +36,10 @@ class GroupsPage {
 	}
 
 	public function getHtml() {
+		return $this->template->render( [
+			'header_html' => $this->headerHtml,
+			'table_html' => $this->getTable()->render()
+		] );
 		$s = '';
 		$s .= "<html>";
 		$s .=  "<head>";
