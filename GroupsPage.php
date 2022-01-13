@@ -10,7 +10,6 @@ use Twig\TemplateWrapper;
 class GroupsPage {
 
 	private $data;
-	private $headerHtml;
 	private $metaGroupFormatters;
 	private $sourceMetaGroup;
 	private $sourceGroup;
@@ -23,13 +22,11 @@ class GroupsPage {
 	public function __construct(
 		TemplateWrapper $template,
 		GroupsData $data,
-		$headerHtml,
 		$metaGroupFormatters,
 		$sourceMetaGroup,
 		$sourceGroup ) {
 		$this->template = $template;
 		$this->data = $data;
-		$this->headerHtml = $headerHtml;
 		$this->metaGroupFormatters = $metaGroupFormatters;
 		$this->sourceMetaGroup = $sourceMetaGroup;
 		$this->sourceGroup = $sourceGroup;
@@ -37,7 +34,6 @@ class GroupsPage {
 
 	public function getHtml() {
 		return $this->template->render( [
-			'header_html' => $this->headerHtml,
 			'table_html' => $this->getTable()->render()
 		] );
 	}
