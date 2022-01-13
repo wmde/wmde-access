@@ -14,7 +14,7 @@ This tool is setup to automatically pull from this repository every 10 mins in a
 
 Might use provided docker compose file to develop the tool locally.
 
-Running `docker-compose up -d` should install PHP dependencies, and run the tool on `localhost:8080`.
+Running `USERID=$(id -u) GID=$(id -g) docker-compose up -d` should install PHP dependencies, and run the tool on `localhost:8080`.
 
 Note: You might need to change the owner of the `cache` directory to the user you are running docker compose commands with, otherwise nginx process might not be able to create/update cache files.
 `chown $(id -u):$(id -g) cache`
