@@ -80,7 +80,10 @@ $metaGroupFetchers = null;
 $templateLoader = new \Twig\Loader\FilesystemLoader( 'templates' );
 $twig = new \Twig\Environment(
 	$templateLoader,
-	[ 'cache' => 'cache' ]
+	[
+		'auto_reload' => true,
+		'cache' => 'cache',
+	]
 );
 $template = $twig->load( 'index.twig' );
 
@@ -136,9 +139,6 @@ echo (
 				]
 			)
 		),
-		'<h1>WMDE groups</h1>' .
-		'<p>Code for this tool can be found @ <a href=\'https://github.com/wmde/wmde-access\' >https://github.com/wmde/wmde-access</a></p>' .
-		'<p>\'Live\' data on this page is cached for 5 minutes. Some data (Gerrit & Phabricator) is manually maintained.</p>',
 		[
 			MG_LDAP_MAGIC => function ( $name ) {
 				return $name;
