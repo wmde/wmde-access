@@ -79,7 +79,8 @@ $metaGroupFetchers = null;
 
 $templateLoader = new \Twig\Loader\FilesystemLoader( 'templates' );
 $twig = new \Twig\Environment(
-	$templateLoader
+	$templateLoader,
+	[ 'cache' => 'cache' ]
 );
 $template = $twig->load( 'index.twig' );
 
