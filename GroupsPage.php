@@ -40,18 +40,6 @@ class GroupsPage {
 			'header_html' => $this->headerHtml,
 			'table_html' => $this->getTable()->render()
 		] );
-		$s = '';
-		$s .= "<html>";
-		$s .=  "<head>";
-		$s .=  "<link rel=\"stylesheet\" href=\"https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css\">";
-		$s .=  "<link rel=\"stylesheet\" href=\"main.css\">";
-		$s .=  "</head>";
-		$s .=  "<body>";
-		$s .= $this->headerHtml;
-		$s .=  $this->getTable()->render();
-		$s .=  "</body>";
-		$s .=  "</html>";
-		return $s;
 	}
 
 	private function getTable() {
