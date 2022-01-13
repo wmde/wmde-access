@@ -21,6 +21,7 @@ services:
     image: composer:1
     volumes:
      - ./composer.json:/deps/composer.json
+     - ./composer.lock:/deps/composer.lock
      - ./vendor:/deps/vendor
     working_dir: /deps
     command: install
