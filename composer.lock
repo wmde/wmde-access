@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "571fb5eb5a9b2ed090839650f7770baf",
+    "content-hash": "5b820bb623d357cc22ba29b4cdea2b11",
     "packages": [
         {
             "name": "gilbitron/php-simplecache",
@@ -355,51 +355,6 @@
                 }
             ],
             "time": "2021-12-16T21:58:21+00:00"
-        },
-        {
-            "name": "tlr/html-table-builder",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tedslittlerobot/html-table-builder.git",
-                "reference": "02b78ecb87ee321bc75e8bd3e2e86947fcad4f6d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tedslittlerobot/html-table-builder/zipball/02b78ecb87ee321bc75e8bd3e2e86947fcad4f6d",
-                "reference": "02b78ecb87ee321bc75e8bd3e2e86947fcad4f6d",
-                "shasum": ""
-            },
-            "require-dev": {
-                "illuminate/support": "^5.3",
-                "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "~5.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Tlr\\Tables\\": "src"
-                },
-                "files": [
-                    "src/helpers.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Stef Horner",
-                    "email": "stef@tedslittlerobot.com"
-                }
-            ],
-            "description": "An HTML Table Builder",
-            "support": {
-                "issues": "https://github.com/tedslittlerobot/html-table-builder/issues",
-                "source": "https://github.com/tedslittlerobot/html-table-builder/tree/master"
-            },
-            "time": "2016-12-07T13:41:14+00:00"
         },
         {
             "name": "twig/twig",
