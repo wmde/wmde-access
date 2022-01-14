@@ -139,38 +139,6 @@ echo (
 				]
 			)
 		),
-		[
-			MG_LDAP_MAGIC => function ( $name ) {
-				return $name;
-			},
-			MG_LDAP_PUPPET => function ( $name ) {
-				return $name;
-			},
-			MG_LDAP_CLOUD => function ( $name ) {
-				$cloudVpsLinkHtmlGen = function ( $name ) {
-					return '<a href="https://openstack-browser.toolforge.org/project/' . $name . '">' . $name . '</a>';
-				};
-				return $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $name ) );
-			},
-			MG_GERRIT => function ( $name ) {
-				if ( $name === 'Gerrit Managers' ) {
-					return '<a href="https://gerrit.wikimedia.org/r/#/admin/groups/119,members" >Gerrit Managers</a>';
-				}
-				return $name;
-			},
-			MG_PHABRICATOR => function ( $name ) {
-				if ( $name === 'WMF-NDA' ) {
-					return '<a href="https://phabricator.wikimedia.org/project/members/61/" >NDA</a>';
-				}
-				if ( $name === 'Security' ) {
-					return '<a href="https://phabricator.wikimedia.org/project/members/30/" >Security</a>';
-				}
-				if ( $name === 'Project-Admins' ) {
-					return '<a href="https://phabricator.wikimedia.org/project/members/1776/" >Project-Admins</a>';
-				}
-				return $name;
-			},
-		],
 		MG_LDAP_MAGIC,
 		'wmde'
 	)
