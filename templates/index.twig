@@ -1,0 +1,42 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <h1>WMDE groups</h1>
+    <p>Code for this tool can be found @ <a href="https://github.com/wmde/wmde-access" >https://github.com/wmde/wmde-access</a></p>
+    <p>'Live' data on this page is cached for 5 minutes. Some data (Gerrit & Phabricator) is manually maintained.</p>
+
+    <table class="table table-striped table-bordered table-hover table-sm">
+        <thead>
+        <tr>
+            <th></th>
+        {% for metadata in columnMetadata %}
+            <th class="group-type" colspan="{{ metadata.columnCount }}">{{ metadata.category }}</th>
+        {% endfor %}
+        </tr>
+        <tr>
+            <th></th>
+        {% for metadata in columnMetadata %}
+            {% for column in metadata.columns %}
+                <th class="group-name rotate"><div>{% if column.url %}<a href="{{ column.url }}">{% endif %}{{ column.name }}{% if column.url %}</a>{% endif %}</div></th>
+            {% endfor %}
+        {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for username, data in userData %}
+            <tr>
+                <td><a href="https://ldap.toolforge.org/user/{{ username }}">{{ username }}</a></td>
+                {% for category, groups in data %}
+                    {% for group in groups %}
+                        <td class="access-{{ group }}">{% if group == 'yes' %}Yes{% endif %}</td>
+                    {% endfor %}
+                {%  endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

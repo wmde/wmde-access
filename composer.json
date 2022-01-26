@@ -2,6 +2,6 @@
     "require": {
         "symfony/yaml": "^5.3",
         "gilbitron/php-simplecache": "^1.4",
-        "tlr/html-table-builder": "^1.1"
+        "twig/twig": "^3.0"
     }
 }

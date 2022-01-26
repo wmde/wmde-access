@@ -77,9 +77,20 @@ $metaGroupFetchers = null;
 ///////////////////////////////////////////////////////////////////////////
 /// Output
 
+$templateLoader = new \Twig\Loader\FilesystemLoader( 'templates' );
+$twig = new \Twig\Environment(
+	$templateLoader,
+	[
+		'auto_reload' => true,
+		'cache' => 'cache',
+	]
+);
+$template = $twig->load( 'index.twig' );
+
 // TODO don't hardcode wmde source group here
 echo (
 	new GroupsPage(
+		$template,
 		(
 			new GroupsData(
 				[
@@ -128,41 +139,6 @@ echo (
 				]
 			)
 		),
-		'<h1>WMDE groups</h1>' .
-		'<p>Code for this tool can be found @ <a href=\'https://github.com/wmde/wmde-access\' >https://github.com/wmde/wmde-access</a></p>' .
-		'<p>\'Live\' data on this page is cached for 5 minutes. Some data (Gerrit & Phabricator) is manually maintained.</p>',
-		[
-			MG_LDAP_MAGIC => function ( $name ) {
-				return $name;
-			},
-			MG_LDAP_PUPPET => function ( $name ) {
-				return $name;
-			},
-			MG_LDAP_CLOUD => function ( $name ) {
-				$cloudVpsLinkHtmlGen = function ( $name ) {
-					return '<a href="https://openstack-browser.toolforge.org/project/' . $name . '">' . $name . '</a>';
-				};
-				return $cloudVpsLinkHtmlGen( str_replace( 'project-', '', $name ) );
-			},
-			MG_GERRIT => function ( $name ) {
-				if ( $name === 'Gerrit Managers' ) {
-					return '<a href="https://gerrit.wikimedia.org/r/#/admin/groups/119,members" >Gerrit Managers</a>';
-				}
-				return $name;
-			},
-			MG_PHABRICATOR => function ( $name ) {
-				if ( $name === 'WMF-NDA' ) {
-					return '<a href="https://phabricator.wikimedia.org/project/members/61/" >NDA</a>';
-				}
-				if ( $name === 'Security' ) {
-					return '<a href="https://phabricator.wikimedia.org/project/members/30/" >Security</a>';
-				}
-				if ( $name === 'Project-Admins' ) {
-					return '<a href="https://phabricator.wikimedia.org/project/members/1776/" >Project-Admins</a>';
-				}
-				return $name;
-			},
-		],
 		MG_LDAP_MAGIC,
 		'wmde'
 	)
