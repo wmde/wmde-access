@@ -3,5 +3,18 @@
         "symfony/yaml": "^5.3",
         "gilbitron/php-simplecache": "^1.4",
         "twig/twig": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5.23"
+    },
+    "autoload": {
+        "psr-4": {
+            "WMDE\\PermissionsOverview\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WMDE\\PermissionsOverview\\Tests\\": "tests/"
+        }
     }
 }
