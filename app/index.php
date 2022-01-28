@@ -19,7 +19,7 @@ $twig = new Environment(
 		'cache' => 'cache',
 	]
 );
-$template = $twig->load( 'index.twig' );
+$template = $twig->load( 'index-v2.twig' );
 
 $cacheTtl = 5 * 60;
 $psr6Cache = new FilesystemAdapter();
