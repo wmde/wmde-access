@@ -34,67 +34,95 @@ class UserPermissionsSite {
 			$userData[$user] = [];
 		}
 
-		$columns = [
+		$groupData = [
+			'ldap-wmde' => [ 'label' => 'wmde' ],
+			'ldap-nda' => [ 'label' => 'nda' ],
+			'deployment' => [ 'label' => 'deployment' ],
+			'wdqs-admins' => [ 'label' => 'wdqs-admins' ],
+			'analytics-privatedata-users' => [ 'label' => 'analytics-privatedata-users' ],
+			'analytics-wmde-users' => [ 'label' => 'analytics-wmde-users' ],
+			'contint-admins' => [ 'label' => 'contint-admins' ],
+			'contint-docker' => [ 'label' => 'contint-docker' ],
+			'releasers-wikibase' => [ 'label' => 'releasers-wikibase' ],
+			'releasers-wikidiff2' => [ 'label' => 'releasers-wikidiff2' ],
+			'project-deployment-prep' => [ 'label' => 'deployment-prep' ],
+			'project-lizenzhinweisgenerator' => [ 'label' => 'lizenzhinweisgenerator' ],
+			'project-wikidata-dev' => [ 'label' => 'wikidata-dev' ],
+			'project-wikidata-query' => [ 'label' => 'wikidata-query' ],
+			'project-wmde-dashboards' => [ 'label' => 'wmde-dashboards' ],
+			'gerrit-managers' => [
+				'label' => 'Gerrit Managers',
+				'url' => 'https://gerrit.wikimedia.org/r/#/admin/groups/119,members',
+			],
+			'phabricator-project-admins' => [
+				'label' => 'Project-Admins',
+				'url' => 'https://phabricator.wikimedia.org/project/members/1776/',
+			],
+			'phabricator-wmf-nda' => [
+				'label' => 'NDA',
+				'url' => 'https://phabricator.wikimedia.org/project/members/61/',
+			],
+			'phabricator-security' => [
+				'label' => 'Security',
+				'url' => 'https://phabricator.wikimedia.org/project/members/30/',
+			],
+		];
+
+		$groups = ( new GroupDefinitionBuilder() )->getGroups( $groupData );
+
+		$columnData = [
 			'ldap-magic' => [
 				'category' => 'LDAP magic',
 				'columns' => [
-					'ldap-wmde' => [ 'label' => 'wmde' ],
-					'ldap-nda' => [ 'label' => 'nda' ],
+					'ldap-wmde',
+					'ldap-nda',
 				],
 			],
 			'ldap-puppet' => [
 				'category' => 'LDAP operations-puppet',
 				'columns' => [
-					[ 'label' => 'deployment' ],
-					[ 'label' => 'wdqs-admins' ],
-					[ 'label' => 'analytics-privatedata-users' ],
-					[ 'label' => 'analytics-wmde-users' ],
-					[ 'label' => 'contint-admins' ],
-					[ 'label' => 'contint-docker' ],
-					[ 'label' => 'releasers-wikibase' ],
-					[ 'label' => 'releasers-wikidiff2' ],
+					'deployment',
+					'wdqs-admins',
+					'analytics-privatedata-users',
+					'analytics-wmde-users',
+					'contint-admins',
+					'contint-docker',
+					'releasers-wikibase',
+					'releasers-wikidiff2',
 				],
 			],
 			'ldap-cloud-projects' => [
 				'category' => 'Cloud VPS',
 				'columns' => [
-					[ 'label' => 'deployment-prep' ],
-					[ 'label' => 'lizenzhinweisgenerator' ],
-					[ 'label' => 'wikidata-dev' ],
-					[ 'label' => 'wikidata-query' ],
-					[ 'label' => 'wmde-dashboards' ],
+					'project-deployment-prep',
+					'project-lizenzhinweisgenerator',
+					'project-wikidata-dev',
+					'project-wikidata-query',
+					'project-wmde-dashboards',
 				],
 			],
 			'gerrit' => [
 				'category' => 'Gerrit',
 				'columns' => [
-					[
-						'label' => 'Gerrit Managers',
-						'url' => 'https://gerrit.wikimedia.org/r/#/admin/groups/119,members',
-					],
+					'gerrit-managers',
 				],
 			],
 			'phabricator' => [
 				'category' => 'Phabricator',
 				'columns' => [
-					[
-						'label' => 'Project-Admins',
-						'url' => 'https://phabricator.wikimedia.org/project/members/1776/',
-					],
-					[
-						'label' => 'NDA',
-						'url' => 'https://phabricator.wikimedia.org/project/members/61/',
-					],
-					[
-						'label' => 'Security',
-						'url' => 'https://phabricator.wikimedia.org/project/members/30/',
-					],
+					'phabricator-project-admins',
+					'phabricator-wmf-nda',
+					'phabricator-security',
 				],
 			],
 		];
 
+		$columnDefinitions = new ColumnDefinitions( $columnData );
+
+		$columnPresenter = new ColumnPresenter();
+
 		return $this->template->render( [
-			'columnMetadata' => $columns,
+			'columnMetadata' => $columnPresenter->present( $columnDefinitions, $groups ),
 			'userData' => $userData,
 		] );
 	}
