@@ -13,7 +13,7 @@
     <tr>
         <th></th>
         {% for metadata in columnMetadata %}
-            <th class="group-type" colspan="{{ metadata.columnCount }}">{{ metadata.category }}</th>
+            <th class="group-type" colspan="{{ metadata.columns|length }}">{{ metadata.category }}</th>
         {% endfor %}
     </tr>
     <tr>

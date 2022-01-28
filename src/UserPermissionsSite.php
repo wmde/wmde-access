@@ -37,7 +37,6 @@ class UserPermissionsSite {
 		$columns = [
 			'ldap-magic' => [
 				'category' => 'LDAP magic',
-				'columnCount' => 2,
 				'columns' => [
 					'ldap-wmde' => [ 'label' => 'wmde' ],
 					'ldap-nda' => [ 'label' => 'nda' ],
@@ -45,7 +44,6 @@ class UserPermissionsSite {
 			],
 			'ldap-puppet' => [
 				'category' => 'LDAP operations-puppet',
-				'columnCount' => 8,
 				'columns' => [
 					[ 'label' => 'deployment' ],
 					[ 'label' => 'wdqs-admins' ],
@@ -59,7 +57,6 @@ class UserPermissionsSite {
 			],
 			'ldap-cloud-projects' => [
 				'category' => 'Cloud VPS',
-				'columnCount' => 5,
 				'columns' => [
 					[ 'label' => 'deployment-prep' ],
 					[ 'label' => 'lizenzhinweisgenerator' ],
@@ -70,7 +67,6 @@ class UserPermissionsSite {
 			],
 			'gerrit' => [
 				'category' => 'Gerrit',
-				'columnCount' => 1,
 				'columns' => [
 					[
 						'label' => 'Gerrit Managers',
@@ -80,7 +76,6 @@ class UserPermissionsSite {
 			],
 			'phabricator' => [
 				'category' => 'Phabricator',
-				'columnCount' => 3,
 				'columns' => [
 					[
 						'label' => 'Project-Admins',
