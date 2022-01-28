@@ -20,7 +20,7 @@
         <th></th>
         {% for metadata in columnMetadata %}
             {% for column in metadata.columns %}
-                <th class="group-name rotate"><div>{% if column.url %}<a href="{{ column.url }}">{% endif %}{{ column.name }}{% if column.url %}</a>{% endif %}</div></th>
+                <th class="group-name rotate"><div>{% if column.url %}<a href="{{ column.url }}">{% endif %}{{ column.label }}{% if column.url %}</a>{% endif %}</div></th>
             {% endfor %}
         {% endfor %}
     </tr>
