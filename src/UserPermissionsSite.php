@@ -12,6 +12,10 @@ use Twig\TemplateWrapper;
 class UserPermissionsSite {
 
 	/**
+	 * @var SiteConfig
+	 */
+	private $config;
+	/**
 	 * @var TemplateWrapper
 	 */
 	private $template;
@@ -21,9 +25,11 @@ class UserPermissionsSite {
 	private $dataLoader;
 
 	public function __construct(
+		SiteConfig $config,
 		TemplateWrapper $template,
 		WmfLdapGroupDataLoader $dataLoader
 	) {
+		$this->config = $config;
 		$this->template = $template;
 		$this->dataLoader = $dataLoader;
 	}
@@ -36,90 +42,9 @@ class UserPermissionsSite {
 			$userData[$user] = [];
 		}
 
-		$groupData = [
-			'ldap-wmde' => [ 'label' => 'wmde' ],
-			'ldap-nda' => [ 'label' => 'nda' ],
-			'deployment' => [ 'label' => 'deployment' ],
-			'wdqs-admins' => [ 'label' => 'wdqs-admins' ],
-			'analytics-privatedata-users' => [ 'label' => 'analytics-privatedata-users' ],
-			'analytics-wmde-users' => [ 'label' => 'analytics-wmde-users' ],
-			'contint-admins' => [ 'label' => 'contint-admins' ],
-			'contint-docker' => [ 'label' => 'contint-docker' ],
-			'releasers-wikibase' => [ 'label' => 'releasers-wikibase' ],
-			'releasers-wikidiff2' => [ 'label' => 'releasers-wikidiff2' ],
-			'project-deployment-prep' => [ 'label' => 'deployment-prep' ],
-			'project-lizenzhinweisgenerator' => [ 'label' => 'lizenzhinweisgenerator' ],
-			'project-wikidata-dev' => [ 'label' => 'wikidata-dev' ],
-			'project-wikidata-query' => [ 'label' => 'wikidata-query' ],
-			'project-wmde-dashboards' => [ 'label' => 'wmde-dashboards' ],
-			'gerrit-managers' => [
-				'label' => 'Gerrit Managers',
-				'url' => 'https://gerrit.wikimedia.org/r/#/admin/groups/119,members',
-			],
-			'phabricator-project-admins' => [
-				'label' => 'Project-Admins',
-				'url' => 'https://phabricator.wikimedia.org/project/members/1776/',
-			],
-			'phabricator-wmf-nda' => [
-				'label' => 'NDA',
-				'url' => 'https://phabricator.wikimedia.org/project/members/61/',
-			],
-			'phabricator-security' => [
-				'label' => 'Security',
-				'url' => 'https://phabricator.wikimedia.org/project/members/30/',
-			],
-		];
+		$groups = $this->config->getGroupDefinitions();
 
-		$groups = ( new GroupDefinitionBuilder() )->getGroups( $groupData );
-
-		$columnData = [
-			'ldap-magic' => [
-				'category' => 'LDAP magic',
-				'columns' => [
-					'ldap-wmde',
-					'ldap-nda',
-				],
-			],
-			'ldap-puppet' => [
-				'category' => 'LDAP operations-puppet',
-				'columns' => [
-					'deployment',
-					'wdqs-admins',
-					'analytics-privatedata-users',
-					'analytics-wmde-users',
-					'contint-admins',
-					'contint-docker',
-					'releasers-wikibase',
-					'releasers-wikidiff2',
-				],
-			],
-			'ldap-cloud-projects' => [
-				'category' => 'Cloud VPS',
-				'columns' => [
-					'project-deployment-prep',
-					'project-lizenzhinweisgenerator',
-					'project-wikidata-dev',
-					'project-wikidata-query',
-					'project-wmde-dashboards',
-				],
-			],
-			'gerrit' => [
-				'category' => 'Gerrit',
-				'columns' => [
-					'gerrit-managers',
-				],
-			],
-			'phabricator' => [
-				'category' => 'Phabricator',
-				'columns' => [
-					'phabricator-project-admins',
-					'phabricator-wmf-nda',
-					'phabricator-security',
-				],
-			],
-		];
-
-		$columnDefinitions = new ColumnDefinitions( $columnData );
+		$columnDefinitions = $this->config->getColumnDefinitions();
 
 		$columnPresenter = new ColumnPresenter();
 

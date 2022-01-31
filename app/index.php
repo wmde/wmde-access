@@ -5,8 +5,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use FileFetcher\Cache\Factory;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
+use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use WMDE\PermissionsOverview\GroupDefinitionBuilder;
+use WMDE\PermissionsOverview\SiteConfig;
 use WMDE\PermissionsOverview\UserAgentProvidingFileFetcher;
 use WMDE\PermissionsOverview\UserPermissionsSite;
 use WMDE\PermissionsOverview\WmfLdapGroupDataLoader;
@@ -29,6 +32,10 @@ $dataLoader = new WmfLdapGroupDataLoader(
 	( new Factory() )->newCachingFetcher( new UserAgentProvidingFileFetcher( 'github.com/wmde/wmde-access' ), $psr16Cache, $cacheTtl )
 );
 
-$site = new UserPermissionsSite( $template, $dataLoader );
+$config = Yaml::parseFile( __DIR__ . '/../config.yaml' );
+
+$siteConfig = new SiteConfig( $config, new GroupDefinitionBuilder() );
+
+$site = new UserPermissionsSite( $siteConfig, $template, $dataLoader );
 
 echo $site->printHtml();
