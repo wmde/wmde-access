@@ -24,29 +24,24 @@ class UserPermissionsSite {
 	 */
 	private $columnPresenter;
 	/**
-	 * @var WmfLdapGroupDataLoader
+	 * @var UserDataLoader
 	 */
-	private $dataLoader;
+	private $userDataLoader;
 
 	public function __construct(
 		SiteConfig $config,
 		TemplateWrapper $template,
 		ColumnPresenter $columnPresenter,
-		WmfLdapGroupDataLoader $dataLoader
+		UserDataLoader $userDataLoader
 	) {
 		$this->config = $config;
 		$this->template = $template;
 		$this->columnPresenter = $columnPresenter;
-		$this->dataLoader = $dataLoader;
+		$this->userDataLoader = $userDataLoader;
 	}
 
 	public function printHtml(): string {
-		$userData = [];
-		$sourceGroup = 'wmde';
-		$userNames = $this->dataLoader->getUsersInGroup( $sourceGroup );
-		foreach ( $userNames as $user ) {
-			$userData[$user] = [];
-		}
+		$userData = $this->userDataLoader->loadDataOfUsersFromGroup( 'wmde' );
 
 		$groups = $this->config->getGroupDefinitions();
 
