@@ -40,7 +40,7 @@ $siteConfig = new SiteConfig( $config, new GroupDefinitionBuilder() );
 
 $columnPresenter = new ColumnPresenter( $siteConfig->getColumnDefinitions() );
 
-$userDataLoader = new UserDataLoader( $wmfLdapGroupDataLoader );
+$userDataLoader = new UserDataLoader( $siteConfig->getColumnDefinitions(), $siteConfig->getGroupDefinitions(), $wmfLdapGroupDataLoader );
 
 $site = new UserPermissionsSite( $siteConfig, $template, $columnPresenter, $userDataLoader );
 

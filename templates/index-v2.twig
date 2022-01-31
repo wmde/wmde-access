@@ -29,9 +29,10 @@
     {% for username, data in userData %}
         <tr>
             <td><a href="https://ldap.toolforge.org/user/{{ username }}">{{ username }}</a></td>
-            {% for category, groups in data %}
-                {% for group in groups %}
-                    <td class="access-{{ group }}">{% if group == 'yes' %}Yes{% endif %}</td>
+            {% for metadata in columnMetadata %}
+                {% for group in metadata.columns|keys %}
+                    {% set membership = data[group] ? 'yes' : 'no' %}
+                    <td class="access-{{ membership }}">{% if membership == 'yes' %}Yes{% endif %}</td>
                 {% endfor %}
             {%  endfor %}
         </tr>

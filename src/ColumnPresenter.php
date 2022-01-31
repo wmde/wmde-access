@@ -29,7 +29,7 @@ class ColumnPresenter {
 			];
 			$groupsToPresent = $this->columnDefinitions->getGroupsFromCategory( $category );
 			foreach ( $groupsToPresent as $group ) {
-				$presentableData[$category]['columns'][] = $this->presentGroup( $groups[$group] );
+				$presentableData[$category]['columns'][$group] = $this->presentGroup( $groups[$group] );
 			}
 		}
 

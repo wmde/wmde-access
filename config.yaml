@@ -1,8 +1,10 @@
 groups:
   ldap-wmde:
     label: wmde
+    type: wmf-ldap
   ldap-nda:
     label: nda
+    type: wmf-ldap
   deployment:
     label: deployment
   wdqs-admins:
