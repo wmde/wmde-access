@@ -7,20 +7,28 @@ groups:
     type: wmf-ldap
   deployment:
     label: deployment
+    type: wmf-ldap-puppet
   wdqs-admins:
     label: wdqs-admins
+    type: wmf-ldap-puppet
   analytics-privatedata-users:
     label: analytics-privatedata-users
+    type: wmf-ldap-puppet
   analytics-wmde-users:
     label: analytics-wmde-users
+    type: wmf-ldap-puppet
   contint-admins:
     label: contint-admins
+    type: wmf-ldap-puppet
   contint-docker:
     label: contint-docker
+    type: wmf-ldap-puppet
   releasers-wikibase:
     label: releasers-wikibase
+    type: wmf-ldap-puppet
   releasers-wikidiff2:
     label: releasers-wikidiff2
+    type: wmf-ldap-puppet
   project-deployment-prep:
     label: deployment-prep
   project-lizenzhinweisgenerator:

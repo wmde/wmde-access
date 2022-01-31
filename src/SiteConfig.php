@@ -13,6 +13,7 @@ class SiteConfig {
 	private const CONFIG_KEY_COLUMNS = 'columns';
 
 	public const GROUP_TYPE_WMF_LDAP = 'wmf-ldap';
+	public const GROUP_TYPE_WMF_LDAP_PUPPET = 'wmf-ldap-puppet';
 
 	private $config;
 	/**

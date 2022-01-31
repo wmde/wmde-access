@@ -15,14 +15,21 @@ class UserDataLoader {
 	private $groupDefinitions;
 
 	private $wmfLdapGroupDataLoader;
+	/**
+	 * @var WmfLdapPuppetGroupDataLoader
+	 */
+	private $wmfLdapPuppetGroupDataLoader;
 
 	public function __construct(
 		ColumnDefinitions $columnDefinitions,
 		array $groupDefinitions,
-		WmfLdapGroupDataLoader $wmfLdapGroupDataLoader ) {
+		WmfLdapGroupDataLoader $wmfLdapGroupDataLoader,
+		WmfLdapPuppetGroupDataLoader $wmfLdapPuppetGroupDataLoader
+	) {
 		$this->columnDefinitions = $columnDefinitions;
 		$this->groupDefinitions = $groupDefinitions;
 		$this->wmfLdapGroupDataLoader = $wmfLdapGroupDataLoader;
+		$this->wmfLdapPuppetGroupDataLoader = $wmfLdapPuppetGroupDataLoader;
 	}
 
 	public function loadDataOfUsersFromGroup( string $sourceGroup ): array {
@@ -51,6 +58,8 @@ class UserDataLoader {
 					// TODO: Move this magic out of here. Exact LDAP group name should become a part of config probably
 					$ldapGroup = str_replace( 'ldap-', '', $ldapGroup );
 					$groupMembers[$group->getName()] = $this->wmfLdapGroupDataLoader->getUsersInGroup( $ldapGroup );
+				} elseif ( $group->getType() === SiteConfig::GROUP_TYPE_WMF_LDAP_PUPPET ) {
+					$groupMembers[$group->getName()] = $this->wmfLdapPuppetGroupDataLoader->getUsersInGroup( $group->getName() );
 				}
 			}
 		}
