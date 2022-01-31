@@ -4,18 +4,30 @@ declare( strict_types = 1 );
 
 namespace WMDE\PermissionsOverview;
 
+/**
+ * @licence BSD-3-Clause
+ */
 class ColumnPresenter {
 
-	public function present( ColumnDefinitions $columns, array $groups ) {
+	/**
+	 * @var ColumnDefinitions
+	 */
+	private $columnDefinitions;
+
+	public function __construct(ColumnDefinitions $columnDefinitions ) {
+		$this->columnDefinitions = $columnDefinitions;
+	}
+
+	public function present( array $groups ) {
 		$presentableData = [];
 
-		$categories = $columns->getCategories();
+		$categories = $this->columnDefinitions->getCategories();
 
 		foreach ( $categories as $category ) {
 			$presentableData[$category] = [
-				'category' => $columns->getCategoryLabel( $category ),
+				'category' => $this->columnDefinitions->getCategoryLabel( $category ),
 			];
-			$groupsToPresent = $columns->getGroupsFromCategory( $category );
+			$groupsToPresent = $this->columnDefinitions->getGroupsFromCategory( $category );
 			foreach ( $groupsToPresent as $group ) {
 				$presentableData[$category]['columns'][] = $this->presentGroup( $groups[$group] );
 			}

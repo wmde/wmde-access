@@ -20,6 +20,10 @@ class UserPermissionsSite {
 	 */
 	private $template;
 	/**
+	 * @var ColumnPresenter
+	 */
+	private $columnPresenter;
+	/**
 	 * @var WmfLdapGroupDataLoader
 	 */
 	private $dataLoader;
@@ -27,10 +31,12 @@ class UserPermissionsSite {
 	public function __construct(
 		SiteConfig $config,
 		TemplateWrapper $template,
+		ColumnPresenter $columnPresenter,
 		WmfLdapGroupDataLoader $dataLoader
 	) {
 		$this->config = $config;
 		$this->template = $template;
+		$this->columnPresenter = $columnPresenter;
 		$this->dataLoader = $dataLoader;
 	}
 
@@ -44,12 +50,8 @@ class UserPermissionsSite {
 
 		$groups = $this->config->getGroupDefinitions();
 
-		$columnDefinitions = $this->config->getColumnDefinitions();
-
-		$columnPresenter = new ColumnPresenter();
-
 		return $this->template->render( [
-			'columnMetadata' => $columnPresenter->present( $columnDefinitions, $groups ),
+			'columnMetadata' => $this->columnPresenter->present( $groups ),
 			'userData' => $userData,
 		] );
 	}

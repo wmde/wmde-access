@@ -8,6 +8,7 @@ use Symfony\Component\Cache\Psr16Cache;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use WMDE\PermissionsOverview\ColumnPresenter;
 use WMDE\PermissionsOverview\GroupDefinitionBuilder;
 use WMDE\PermissionsOverview\SiteConfig;
 use WMDE\PermissionsOverview\UserAgentProvidingFileFetcher;
@@ -36,6 +37,8 @@ $config = Yaml::parseFile( __DIR__ . '/../config.yaml' );
 
 $siteConfig = new SiteConfig( $config, new GroupDefinitionBuilder() );
 
-$site = new UserPermissionsSite( $siteConfig, $template, $dataLoader );
+$columnPresenter = new ColumnPresenter( $siteConfig->getColumnDefinitions() );
+
+$site = new UserPermissionsSite( $siteConfig, $template, $columnPresenter, $dataLoader );
 
 echo $site->printHtml();
