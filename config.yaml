@@ -55,14 +55,17 @@ groups:
     type: local-file
     url: "https://gerrit.wikimedia.org/r/#/admin/groups/119,members"
   phabricator-project-admins:
+    id: phabricator_Project-Admins
     label: "Project-Admins"
     type: local-file
     url: "https://phabricator.wikimedia.org/project/members/1776/"
   phabricator-wmf-nda:
+    id: phabricator_WMF-NDA
     label: NDA
     type: local-file
     url: "https://phabricator.wikimedia.org/project/members/61/"
   phabricator-security:
+    id: phabricator_Security
     label: Security
     type: local-file
     url: "https://phabricator.wikimedia.org/project/members/30/"
