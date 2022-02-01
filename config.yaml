@@ -31,14 +31,19 @@ groups:
     type: wmf-ldap-puppet
   project-deployment-prep:
     label: deployment-prep
+    type: wmf-ldap
   project-lizenzhinweisgenerator:
     label: lizenzhinweisgenerator
+    type: wmf-ldap
   project-wikidata-dev:
     label: wikidata-dev
+    type: wmf-ldap
   project-wikidata-query:
     label: wikidata-query
+    type: wmf-ldap
   project-wmde-dashboards:
     label: wmde-dashboards
+    type: wmf-ldap
   gerrit-managers:
     label: "Gerrit Managers"
     url: "https://gerrit.wikimedia.org/r/#/admin/groups/119,members"
