@@ -5,6 +5,7 @@ declare( strict_types = 1 );
 namespace WMDE\PermissionsOverview;
 
 use FileFetcher\FileFetcher;
+use FileFetcher\FileFetchingException;
 
 /**
  * @licence BSD-3-Clause
@@ -25,7 +26,11 @@ class WmfLdapGroupDataLoader {
 	public function getUsersInGroup( string $group ): array {
 		$groupDataUrl = self::WMF_LDAP_GROUP_URL_PREFIX . $group;
 
-		$userHtml = $this->fileFetcher->fetchFile( $groupDataUrl );
+		try {
+			$userHtml = $this->fileFetcher->fetchFile( $groupDataUrl );
+		} catch ( FileFetchingException $exception ) {
+			return [];
+		}
 
 		preg_match_all( '/"\/user\/([a-zA-Z0-9-]*)"\>/', $userHtml, $userMatches );
 

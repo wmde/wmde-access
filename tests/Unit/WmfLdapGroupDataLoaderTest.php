@@ -6,6 +6,7 @@ namespace WMDE\PermissionsOverview\Tests\Unit;
 
 use FileFetcher\SimpleFileFetcher;
 use FileFetcher\StubFileFetcher;
+use FileFetcher\ThrowingFileFetcher;
 use PHPUnit\Framework\TestCase;
 use WMDE\PermissionsOverview\WmfLdapGroupDataLoader;
 
@@ -33,6 +34,14 @@ class WmfLdapGroupDataLoaderTest extends TestCase {
 
 	public function testGivenNoUserDataInHtml_returnsEmptyUserList() {
 		$loader = new WmfLdapGroupDataLoader( new StubFileFetcher( 'foo' ) );
+
+		$users = $loader->getUsersInGroup( 'test-group' );
+
+		$this->assertEmpty( $users );
+	}
+
+	public function testGivenErrorFetchingData_returnsEmptyUserList() {
+		$loader = new WmfLdapGroupDataLoader( new ThrowingFileFetcher() );
 
 		$users = $loader->getUsersInGroup( 'test-group' );
 
