@@ -32,18 +32,23 @@ groups:
   project-deployment-prep:
     label: deployment-prep
     type: wmf-ldap
+    url: "https://openstack-browser.toolforge.org/project/deployment-prep"
   project-lizenzhinweisgenerator:
     label: lizenzhinweisgenerator
     type: wmf-ldap
+    url: "https://openstack-browser.toolforge.org/project/lizenzhinweisgenerator"
   project-wikidata-dev:
     label: wikidata-dev
     type: wmf-ldap
+    url: "https://openstack-browser.toolforge.org/project/wikidata-dev"
   project-wikidata-query:
     label: wikidata-query
     type: wmf-ldap
+    url: "https://openstack-browser.toolforge.org/project/wikidata-query"
   project-wmde-dashboards:
     label: wmde-dashboards
     type: wmf-ldap
+    url: "https://openstack-browser.toolforge.org/project/wmde-dashboards"
   gerrit-managers:
     label: "Gerrit Managers"
     url: "https://gerrit.wikimedia.org/r/#/admin/groups/119,members"
