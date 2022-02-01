@@ -50,16 +50,21 @@ groups:
     type: wmf-ldap
     url: "https://openstack-browser.toolforge.org/project/wmde-dashboards"
   gerrit-managers:
+    id: "gerrit_Gerrit Managers"
     label: "Gerrit Managers"
+    type: local-file
     url: "https://gerrit.wikimedia.org/r/#/admin/groups/119,members"
   phabricator-project-admins:
     label: "Project-Admins"
+    type: local-file
     url: "https://phabricator.wikimedia.org/project/members/1776/"
   phabricator-wmf-nda:
     label: NDA
+    type: local-file
     url: "https://phabricator.wikimedia.org/project/members/61/"
   phabricator-security:
     label: Security
+    type: local-file
     url: "https://phabricator.wikimedia.org/project/members/30/"
 
 columns:

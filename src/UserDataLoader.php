@@ -19,17 +19,23 @@ class UserDataLoader {
 	 * @var WmfLdapPuppetGroupDataLoader
 	 */
 	private $wmfLdapPuppetGroupDataLoader;
+	/**
+	 * @var LocalFileGroupDataLoader
+	 */
+	private $localFileGroupDataLoader;
 
 	public function __construct(
 		ColumnDefinitions $columnDefinitions,
 		array $groupDefinitions,
 		WmfLdapGroupDataLoader $wmfLdapGroupDataLoader,
-		WmfLdapPuppetGroupDataLoader $wmfLdapPuppetGroupDataLoader
+		WmfLdapPuppetGroupDataLoader $wmfLdapPuppetGroupDataLoader,
+		LocalFileGroupDataLoader $localFileGroupDataLoader
 	) {
 		$this->columnDefinitions = $columnDefinitions;
 		$this->groupDefinitions = $groupDefinitions;
 		$this->wmfLdapGroupDataLoader = $wmfLdapGroupDataLoader;
 		$this->wmfLdapPuppetGroupDataLoader = $wmfLdapPuppetGroupDataLoader;
+		$this->localFileGroupDataLoader = $localFileGroupDataLoader;
 	}
 
 	public function loadDataOfUsersFromGroup( string $sourceGroup ): array {
@@ -60,6 +66,8 @@ class UserDataLoader {
 					$groupMembers[$group->getName()] = $this->wmfLdapGroupDataLoader->getUsersInGroup( $ldapGroup );
 				} elseif ( $group->getType() === SiteConfig::GROUP_TYPE_WMF_LDAP_PUPPET ) {
 					$groupMembers[$group->getName()] = $this->wmfLdapPuppetGroupDataLoader->getUsersInGroup( $group->getName() );
+				} elseif ( $group->getType() === SiteConfig::GROUP_TYPE_LOCAL_FILE ) {
+					$groupMembers[$group->getName()] = $this->localFileGroupDataLoader->getUsersInGroup( $group->getId() );
 				}
 			}
 		}

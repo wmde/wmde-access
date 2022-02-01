@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use FileFetcher\Cache\Factory;
+use FileFetcher\SimpleFileFetcher;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 use Symfony\Component\Yaml\Yaml;
@@ -38,6 +39,8 @@ $wmfLdapGroupDataLoader = new WmfLdapGroupDataLoader(
 );
 $wmfLdapPuppetGroupDataLoader = new WmfLdapPuppetGroupDataLoader( $cachingFetcher );
 
+$localFileGroupDataLoader = new \WMDE\PermissionsOverview\LocalFileGroupDataLoader( new SimpleFileFetcher() );
+
 $config = Yaml::parseFile( __DIR__ . '/../config.yaml' );
 
 $siteConfig = new SiteConfig( $config, new GroupDefinitionBuilder() );
@@ -48,7 +51,8 @@ $userDataLoader = new UserDataLoader(
 	$siteConfig->getColumnDefinitions(),
 	$siteConfig->getGroupDefinitions(),
 	$wmfLdapGroupDataLoader,
-	$wmfLdapPuppetGroupDataLoader
+	$wmfLdapPuppetGroupDataLoader,
+	$localFileGroupDataLoader
 );
 
 $site = new UserPermissionsSite( $siteConfig, $template, $columnPresenter, $userDataLoader );

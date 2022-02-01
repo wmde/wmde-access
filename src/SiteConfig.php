@@ -14,6 +14,7 @@ class SiteConfig {
 
 	public const GROUP_TYPE_WMF_LDAP = 'wmf-ldap';
 	public const GROUP_TYPE_WMF_LDAP_PUPPET = 'wmf-ldap-puppet';
+	public const GROUP_TYPE_LOCAL_FILE = 'local-file';
 
 	private $config;
 	/**

@@ -20,12 +20,18 @@ class GroupMetadata {
 	 */
 	private $label;
 
+	/**
+	 * @var string
+	 */
+	private $id;
+
 	private $url;
 
-	public function __construct( string $name, string $type, string $label, string $url ) {
+	public function __construct( string $name, string $type, string $label, string $id, string $url ) {
 		$this->name = $name;
 		$this->type = $type;
 		$this->label = $label;
+		$this->id = $id;
 		$this->url = $url;
 	}
 
@@ -39,6 +45,10 @@ class GroupMetadata {
 
 	public function getLabel(): string {
 		return $this->label;
+	}
+
+	public function getId(): string {
+		return $this->id;
 	}
 
 	public function getUrl(): string {

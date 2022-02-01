@@ -13,7 +13,13 @@ class GroupDefinitionBuilder {
 		$groups = [];
 
 		foreach ( $groupData as $groupName => $metadata ) {
-			$groups[$groupName] = new GroupMetadata( $groupName, $metadata['type'] ?? '', $metadata['label'], $metadata['url'] ?? '' );
+			$groups[$groupName] = new GroupMetadata(
+				$groupName,
+				$metadata['type'] ?? '',
+				$metadata['label'],
+				$metadata['id'] ?? '',
+				$metadata['url'] ?? ''
+			);
 		}
 
 		return $groups;
