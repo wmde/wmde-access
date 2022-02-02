@@ -60,9 +60,10 @@ class UserDataLoader {
 			foreach ( $this->columnDefinitions->getGroupsFromCategory( $category ) as $groupName ) {
 				$group = $this->groupDefinitions[$groupName];
 				if ( $group->getType() === SiteConfig::GROUP_TYPE_WMF_LDAP ) {
-					$ldapGroup = $group->getName();
-					// TODO: Move this magic out of here. Exact LDAP group name should become a part of config probably
-					$ldapGroup = str_replace( 'ldap-', '', $ldapGroup );
+					$ldapGroup = $group->getId();
+					if ( $ldapGroup === '') {
+						$ldapGroup = $group->getName();
+					}
 					$groupMembers[$group->getName()] = $this->wmfLdapGroupDataLoader->getUsersInGroup( $ldapGroup );
 				} elseif ( $group->getType() === SiteConfig::GROUP_TYPE_WMF_LDAP_PUPPET ) {
 					$groupMembers[$group->getName()] = $this->wmfLdapPuppetGroupDataLoader->getUsersInGroup( $group->getName() );

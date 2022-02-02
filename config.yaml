@@ -1,8 +1,10 @@
 groups:
   ldap-wmde:
+    id: wmde
     label: wmde
     type: wmf-ldap
   ldap-nda:
+    id: nda
     label: nda
     type: wmf-ldap
   deployment:
