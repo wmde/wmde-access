@@ -13,12 +13,12 @@ services:
       - composer
       - php
   php:
-    image: php:7.4-fpm
+    image: php:8.2-fpm
     user: ${USERID}:${GID}
     volumes:
       - .:/var/www/html
   composer:
-    image: composer:1
+    image: composer
     volumes:
      - ./composer.json:/deps/composer.json
      - ./composer.lock:/deps/composer.lock

@@ -1,15 +1,15 @@
 {
     "require": {
-        "symfony/yaml": "^5.3",
-        "gilbitron/php-simplecache": "^1.4",
-        "jeroen/file-fetcher": "^6.0",
+        "symfony/yaml": "^5.4.23",
+        "gilbitron/php-simplecache": "^1.4.2",
+        "jeroen/file-fetcher": "^6.1.0",
         "jeroen/file-fetcher-cache": "^1.0.1",
         "psr/cache": "^1.0.1",
-        "twig/twig": "^3.0",
-        "symfony/cache": "^5.4"
+        "twig/twig": "^3.7.1",
+        "symfony/cache": "^5.4.28"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5.23"
+        "phpunit/phpunit": "^8.5.34"
     },
     "autoload": {
         "psr-4": {
