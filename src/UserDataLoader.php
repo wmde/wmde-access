@@ -38,16 +38,17 @@ class UserDataLoader {
 		$this->localFileGroupDataLoader = $localFileGroupDataLoader;
 	}
 
-	public function loadDataOfUsersFromGroup( string $sourceGroup ): array {
-		$userNames = $this->wmfLdapGroupDataLoader->getUsersInGroup( $sourceGroup );
-
+	public function loadDataOfUsers( array $users ): array {
 		$groupMembers = $this->loadGroupMembers();
 
 		$userData = [];
 
 		foreach ( $groupMembers as $group => $memberList ) {
-			foreach ( $userNames as $user ) {
-				$userData[$user][$group] = in_array( $user, $memberList );
+			foreach ( $users as $userCanonicalName => $userMetadata ) {
+				$userData[$userCanonicalName][$group] = in_array(
+					$this->getUserNameForGroup( $userMetadata, $group ),
+					$memberList
+				);
 			}
 		}
 
@@ -73,6 +74,19 @@ class UserDataLoader {
 			}
 		}
 		return $groupMembers;
+	}
+
+	private function getUserNameForGroup( User $userMetadata, string $groupName ): string {
+		$group = $this->groupDefinitions[$groupName];
+		if ( $group->getType() === SiteConfig::GROUP_TYPE_WMF_LDAP ||  $group->getType() === SiteConfig::GROUP_TYPE_WMF_LDAP_PUPPET ) {
+			return $userMetadata->getWmfLdapUsername();
+		}
+		if ( $group->getType() === SiteConfig::GROUP_TYPE_LOCAL_FILE ) {
+			// TODO: should be canonical name probably in the end
+			return $userMetadata->getWmfLdapUsername();
+		}
+
+		return $userMetadata->getCanonicalName();
 	}
 
 }

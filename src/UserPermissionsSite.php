@@ -41,7 +41,9 @@ class UserPermissionsSite {
 	}
 
 	public function printHtml(): string {
-		$userData = $this->userDataLoader->loadDataOfUsersFromGroup( 'wmde' );
+		$users = $this->config->getUsers();
+
+		$userData = $this->userDataLoader->loadDataOfUsers( $users );
 
 		$groups = $this->config->getGroupDefinitions();
 

@@ -14,6 +14,7 @@ use WMDE\PermissionsOverview\GroupDefinitionBuilder;
 use WMDE\PermissionsOverview\SiteConfig;
 use WMDE\PermissionsOverview\UserAgentProvidingFileFetcher;
 use WMDE\PermissionsOverview\UserDataLoader;
+use WMDE\PermissionsOverview\UserMetadataBuilder;
 use WMDE\PermissionsOverview\UserPermissionsSite;
 use WMDE\PermissionsOverview\WmfLdapGroupDataLoader;
 use WMDE\PermissionsOverview\WmfLdapPuppetGroupDataLoader;
@@ -42,8 +43,10 @@ $wmfLdapPuppetGroupDataLoader = new WmfLdapPuppetGroupDataLoader( $cachingFetche
 $localFileGroupDataLoader = new \WMDE\PermissionsOverview\LocalFileGroupDataLoader( new SimpleFileFetcher() );
 
 $config = Yaml::parseFile( __DIR__ . '/../config.yaml' );
+$userConfig = Yaml::parseFile( __DIR__ . '/../users.yaml' );
 
-$siteConfig = new SiteConfig( $config, new GroupDefinitionBuilder() );
+
+$siteConfig = new SiteConfig( array_merge( $config, $userConfig ), new GroupDefinitionBuilder(), new UserMetadataBuilder() );
 
 $columnPresenter = new ColumnPresenter( $siteConfig->getColumnDefinitions() );
 
