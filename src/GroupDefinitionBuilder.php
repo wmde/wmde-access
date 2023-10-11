@@ -18,7 +18,8 @@ class GroupDefinitionBuilder {
 				$metadata['type'] ?? '',
 				$metadata['label'],
 				$metadata['id'] ?? '',
-				$metadata['url'] ?? ''
+				$metadata['url'] ?? '',
+				$metadata['extra'] ?? []
 			);
 		}
 

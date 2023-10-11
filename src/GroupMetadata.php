@@ -27,7 +27,7 @@ class GroupMetadata {
 
 	private $url;
 
-	public function __construct( string $name, string $type, string $label, string $id, string $url ) {
+	public function __construct( string $name, string $type, string $label, string $id, string $url, private array $extraData ) {
 		$this->name = $name;
 		$this->type = $type;
 		$this->label = $label;
@@ -53,6 +53,10 @@ class GroupMetadata {
 
 	public function getUrl(): string {
 		return $this->url;
+	}
+
+	public function getExtraData(): array {
+		return $this->extraData;
 	}
 
 }
