@@ -1,0 +1,4 @@
+users:
+  jane.doe:
+    wmf-ldap: jane-doe
+    wmf-phabricator: Jane_Doe
