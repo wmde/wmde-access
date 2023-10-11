@@ -29,6 +29,7 @@ class UserDataLoader {
 		array $groupDefinitions,
 		WmfLdapGroupDataLoader $wmfLdapGroupDataLoader,
 		WmfLdapPuppetGroupDataLoader $wmfLdapPuppetGroupDataLoader,
+		private WmfPhabricatorGroupDataLoader $wmfPhabricatorGroupDataLoader,
 		LocalFileGroupDataLoader $localFileGroupDataLoader
 	) {
 		$this->columnDefinitions = $columnDefinitions;
@@ -68,6 +69,10 @@ class UserDataLoader {
 					$groupMembers[$group->getName()] = $this->wmfLdapGroupDataLoader->getUsersInGroup( $ldapGroup );
 				} elseif ( $group->getType() === SiteConfig::GROUP_TYPE_WMF_LDAP_PUPPET ) {
 					$groupMembers[$group->getName()] = $this->wmfLdapPuppetGroupDataLoader->getUsersInGroup( $group->getName() );
+				} elseif ( $group->getType() === 'wmf-phabricator' ) {
+					$groupExtraData = $group->getExtraData();
+					$projectId = (string)$groupExtraData['project-id'];
+					$groupMembers[$group->getName()] = $this->wmfPhabricatorGroupDataLoader->getUsersInGroup( $projectId );
 				} elseif ( $group->getType() === SiteConfig::GROUP_TYPE_LOCAL_FILE ) {
 					$groupMembers[$group->getName()] = $this->localFileGroupDataLoader->getUsersInGroup( $group->getId() );
 				}
@@ -80,6 +85,9 @@ class UserDataLoader {
 		$group = $this->groupDefinitions[$groupName];
 		if ( $group->getType() === SiteConfig::GROUP_TYPE_WMF_LDAP ||  $group->getType() === SiteConfig::GROUP_TYPE_WMF_LDAP_PUPPET ) {
 			return $userMetadata->getWmfLdapUsername();
+		}
+		if ( $group->getType() === 'wmf-phabricator' ) {
+			return $userMetadata->getWmfPhabricatorUsername();
 		}
 		if ( $group->getType() === SiteConfig::GROUP_TYPE_LOCAL_FILE ) {
 			// TODO: should be canonical name probably in the end

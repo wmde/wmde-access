@@ -59,18 +59,24 @@ groups:
   phabricator-project-admins:
     id: phabricator_Project-Admins
     label: "Project-Admins"
-    type: local-file
+    type: wmf-phabricator
     url: "https://phabricator.wikimedia.org/project/members/1776/"
+    extra:
+      project-id: 1776
   phabricator-wmf-nda:
     id: phabricator_WMF-NDA
     label: NDA
-    type: local-file
+    type: wmf-phabricator
     url: "https://phabricator.wikimedia.org/project/members/61/"
+    extra:
+      project-id: 61
   phabricator-security:
     id: phabricator_Security
     label: Security
-    type: local-file
+    type: wmf-phabricator
     url: "https://phabricator.wikimedia.org/project/members/30/"
+    extra:
+      project-id: 30
 
 columns:
   ldap-magic:

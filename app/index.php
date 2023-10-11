@@ -10,7 +10,9 @@ use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use WMDE\PermissionsOverview\ColumnPresenter;
+use WMDE\PermissionsOverview\EnvConfig;
 use WMDE\PermissionsOverview\GroupDefinitionBuilder;
+use WMDE\PermissionsOverview\HttpPostRequestSender;
 use WMDE\PermissionsOverview\SiteConfig;
 use WMDE\PermissionsOverview\UserAgentProvidingFileFetcher;
 use WMDE\PermissionsOverview\UserDataLoader;
@@ -18,6 +20,7 @@ use WMDE\PermissionsOverview\UserMetadataBuilder;
 use WMDE\PermissionsOverview\UserPermissionsSite;
 use WMDE\PermissionsOverview\WmfLdapGroupDataLoader;
 use WMDE\PermissionsOverview\WmfLdapPuppetGroupDataLoader;
+use WMDE\PermissionsOverview\WmfPhabricatorGroupDataLoader;
 
 $templateLoader = new FilesystemLoader( __DIR__ . '/../templates' );
 $twig = new Environment(
@@ -40,6 +43,10 @@ $wmfLdapGroupDataLoader = new WmfLdapGroupDataLoader(
 );
 $wmfLdapPuppetGroupDataLoader = new WmfLdapPuppetGroupDataLoader( $cachingFetcher );
 
+$envConfig = Yaml::parseFile( __DIR__ . '/../env.yaml' );
+
+$phabricatorDataLoader = new WmfPhabricatorGroupDataLoader( new HttpPostRequestSender(), $envConfig[EnvConfig::WMF_PHABRICATOR_API_TOKEN] );
+
 $localFileGroupDataLoader = new \WMDE\PermissionsOverview\LocalFileGroupDataLoader( new SimpleFileFetcher() );
 
 $config = Yaml::parseFile( __DIR__ . '/../config.yaml' );
@@ -55,6 +62,7 @@ $userDataLoader = new UserDataLoader(
 	$siteConfig->getGroupDefinitions(),
 	$wmfLdapGroupDataLoader,
 	$wmfLdapPuppetGroupDataLoader,
+	$phabricatorDataLoader,
 	$localFileGroupDataLoader
 );
 
