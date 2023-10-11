@@ -14,7 +14,7 @@ class WmfPhabricatorGroupDataLoader {
 	private const PHABRICATOR_USER_SEARCH_LIMIT = 100;
 
 	public function __construct(
-        private HttpPostRequestSender $requestSender,
+        private RequestSender $requestSender,
 		private string $apiToken
     ) {
     }

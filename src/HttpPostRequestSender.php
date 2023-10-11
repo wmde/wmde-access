@@ -9,7 +9,7 @@ use RuntimeException;
 /**
  * @licence BSD-3-Clause
  */
-class HttpPostRequestSender {
+class HttpPostRequestSender implements RequestSender {
 
     public function request( string $url, array $postParams ): string {
         $options = [
