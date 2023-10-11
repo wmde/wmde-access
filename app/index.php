@@ -9,6 +9,7 @@ use Symfony\Component\Cache\Psr16Cache;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use WMDE\PermissionsOverview\CachingRequestSender;
 use WMDE\PermissionsOverview\ColumnPresenter;
 use WMDE\PermissionsOverview\EnvConfig;
 use WMDE\PermissionsOverview\GroupDefinitionBuilder;
@@ -45,13 +46,13 @@ $wmfLdapPuppetGroupDataLoader = new WmfLdapPuppetGroupDataLoader( $cachingFetche
 
 $envConfig = Yaml::parseFile( __DIR__ . '/../env.yaml' );
 
-$phabricatorDataLoader = new WmfPhabricatorGroupDataLoader( new HttpPostRequestSender(), $envConfig[EnvConfig::WMF_PHABRICATOR_API_TOKEN] );
+$cachingRequestSender = new CachingRequestSender( new HttpPostRequestSender(), $psr16Cache, $cacheTtl );
+$phabricatorDataLoader = new WmfPhabricatorGroupDataLoader( $cachingRequestSender, $envConfig[EnvConfig::WMF_PHABRICATOR_API_TOKEN] );
 
 $localFileGroupDataLoader = new \WMDE\PermissionsOverview\LocalFileGroupDataLoader( new SimpleFileFetcher() );
 
 $config = Yaml::parseFile( __DIR__ . '/../config.yaml' );
 $userConfig = Yaml::parseFile( __DIR__ . '/../users.yaml' );
-
 
 $siteConfig = new SiteConfig( array_merge( $config, $userConfig ), new GroupDefinitionBuilder(), new UserMetadataBuilder() );
 
