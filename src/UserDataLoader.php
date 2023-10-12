@@ -30,6 +30,7 @@ class UserDataLoader {
 		WmfLdapGroupDataLoader $wmfLdapGroupDataLoader,
 		WmfLdapPuppetGroupDataLoader $wmfLdapPuppetGroupDataLoader,
 		private WmfPhabricatorGroupDataLoader $wmfPhabricatorGroupDataLoader,
+		private WmfGerritGroupDataLoader $wmfGerritGroupDataLoader,
 		LocalFileGroupDataLoader $localFileGroupDataLoader
 	) {
 		$this->columnDefinitions = $columnDefinitions;
@@ -73,6 +74,10 @@ class UserDataLoader {
 					$groupExtraData = $group->getExtraData();
 					$projectId = (string)$groupExtraData['project-id'];
 					$groupMembers[$group->getName()] = $this->wmfPhabricatorGroupDataLoader->getUsersInGroup( $projectId );
+				} elseif ( $group->getType() === 'wmf-gerrit' ) {
+					$groupExtraData = $group->getExtraData();
+					$groupId = (string)$groupExtraData['group-id'];
+					$groupMembers[$group->getName()] = $this->wmfGerritGroupDataLoader->getUsersInGroup( $groupId );
 				} elseif ( $group->getType() === SiteConfig::GROUP_TYPE_LOCAL_FILE ) {
 					$groupMembers[$group->getName()] = $this->localFileGroupDataLoader->getUsersInGroup( $group->getId() );
 				}
@@ -88,6 +93,9 @@ class UserDataLoader {
 		}
 		if ( $group->getType() === 'wmf-phabricator' ) {
 			return $userMetadata->getWmfPhabricatorUsername();
+		}
+		if ( $group->getType() === 'wmf-gerrit' ) {
+			return $userMetadata->getWmfLdapUsername();
 		}
 		if ( $group->getType() === SiteConfig::GROUP_TYPE_LOCAL_FILE ) {
 			// TODO: should be canonical name probably in the end

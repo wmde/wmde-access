@@ -9,6 +9,7 @@ use Symfony\Component\Cache\Psr16Cache;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use WMDE\PermissionsOverview\BasicAuthFileFetcher;
 use WMDE\PermissionsOverview\CachingRequestSender;
 use WMDE\PermissionsOverview\ColumnPresenter;
 use WMDE\PermissionsOverview\EnvConfig;
@@ -19,6 +20,7 @@ use WMDE\PermissionsOverview\UserAgentProvidingFileFetcher;
 use WMDE\PermissionsOverview\UserDataLoader;
 use WMDE\PermissionsOverview\UserMetadataBuilder;
 use WMDE\PermissionsOverview\UserPermissionsSite;
+use WMDE\PermissionsOverview\WmfGerritGroupDataLoader;
 use WMDE\PermissionsOverview\WmfLdapGroupDataLoader;
 use WMDE\PermissionsOverview\WmfLdapPuppetGroupDataLoader;
 use WMDE\PermissionsOverview\WmfPhabricatorGroupDataLoader;
@@ -49,6 +51,14 @@ $envConfig = Yaml::parseFile( __DIR__ . '/../env.yaml' );
 $cachingRequestSender = new CachingRequestSender( new HttpPostRequestSender(), $psr16Cache, $cacheTtl );
 $phabricatorDataLoader = new WmfPhabricatorGroupDataLoader( $cachingRequestSender, $envConfig[EnvConfig::WMF_PHABRICATOR_API_TOKEN] );
 
+$cachingWmfGerritFetcher = ( new Factory() )->newCachingFetcher(
+	new BasicAuthFileFetcher($envConfig[EnvConfig::WMF_GERRIT_USERNAME], $envConfig[EnvConfig::WMF_GERRIT_PASSWORD]),
+	$psr16Cache,
+	$cacheTtl
+);
+
+$wmfGerritDataLoader = new WmfGerritGroupDataLoader( $cachingWmfGerritFetcher );
+
 $localFileGroupDataLoader = new \WMDE\PermissionsOverview\LocalFileGroupDataLoader( new SimpleFileFetcher() );
 
 $config = Yaml::parseFile( __DIR__ . '/../config.yaml' );
@@ -64,6 +74,7 @@ $userDataLoader = new UserDataLoader(
 	$wmfLdapGroupDataLoader,
 	$wmfLdapPuppetGroupDataLoader,
 	$phabricatorDataLoader,
+	$wmfGerritDataLoader,
 	$localFileGroupDataLoader
 );
 
