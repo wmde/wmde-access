@@ -54,8 +54,10 @@ groups:
   gerrit-managers:
     id: "gerrit_Gerrit Managers"
     label: "Gerrit Managers"
-    type: local-file
+    type: wmf-gerrit
     url: "https://gerrit.wikimedia.org/r/#/admin/groups/119,members"
+    extra:
+      group-id: 119
   phabricator-project-admins:
     id: phabricator_Project-Admins
     label: "Project-Admins"
