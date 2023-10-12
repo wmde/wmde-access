@@ -19,8 +19,8 @@ class UserMetadataBuilder {
 		foreach ( $usersMetadata as $canonicalName => $metadata ) {
 			$users[$canonicalName] = new User(
 				$canonicalName,
-				$metadata[self::KEY_WMF_LDAP] ?? $canonicalName, // ?? '',
-				$metadata[self::KEY_WMF_PHABRICATOR] ?? $canonicalName // ?? ''
+				$metadata[self::KEY_WMF_LDAP] ?? '',
+				$metadata[self::KEY_WMF_PHABRICATOR] ?? ''
 			);
 		}
 
