@@ -79,6 +79,14 @@ groups:
     url: "https://phabricator.wikimedia.org/project/members/30/"
     extra:
       project-id: 30
+  phabricator-security-wmde:
+    id: phabricator_security_wmde
+    label: security_wmde
+    type: wmf-phabricator
+    url: "https://phabricator.wikimedia.org/project/members/4572/"
+    extra:
+      project-id: 4572
+
 
 columns:
   ldap-magic:
@@ -115,3 +123,4 @@ columns:
       - phabricator-project-admins
       - phabricator-wmf-nda
       - phabricator-security
+      - phabricator-security-wmde
