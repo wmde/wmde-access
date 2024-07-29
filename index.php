@@ -42,6 +42,7 @@ $groupsToCheck = [
 	MG_LDAP_CLOUD => [
 		// 'project-bastion', // Not working...
 		'project-deployment-prep',
+		'project-integration',
 		// 'project-tools', // Not working....
 		'project-wikidata-dev',
 		'project-wikidata-query',
